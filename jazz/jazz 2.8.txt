@@ -1,0 +1,171 @@
+Hi everyone,
+
+JazzScheme 2.8 is now available. See www.jazzscheme.org for
+details on installing and building Jazz and Jedi from their
+public Git repositories.
+
+After more than a year since the last release, 2.8 has
+focused mainly on adding missing features to the language,
+the library and to the Jedi IDE that has matured into a
+stable, feature-rich IDE dedicated to Lisp, Scheme and
+Gambit development.
+
+For 3.0 we will be releasing a multiple backend architecture
+for the code walker that amongst other things will make Jazz
+much more modular and reduce its footprint by making every
+part of the language modular and loadable as needed.
+
+I am also pleased to announce that the core team is now made
+up of 5 people making regular contributions to JazzScheme.
+
+
+NEW IN 2.8
+
+Build
+  - ./jam Jazz manager
+  - .jamini to customize options
+  - jam info to display submodules information
+  - jam -l (local) option to turn off submodules update
+  - Using TCP ports for robust subprocess parallel build
+
+Kernel
+  - Removed the hardcoded HOME/jazz_user repository
+  - Kernel -nosource option to simulate deployment
+  - Kernel -dry build option
+  - Now generating a clean kernel-interpret script
+  - Added gambit-bootstrap submodule
+  - Support for chained binary repositories
+
+Language
+  - Added reference reification
+  - Module reference syntax is now a.b.c:x
+  - Changed core syntax from jazz. to jazz:
+  - Assertions to special forms and validation suites
+  - Exemplars are now full-fledged class-based prototypes
+  - Added a new terser more expressive format for exemplars
+  - Colors and fonts are now exemplars
+  - Added scripting support through a script special-form
+
+Library
+  - Windows basic support for OpenGL GLUT
+  - Added continuation-checkpoint for C frames protection
+  - Cross-platform color chooser with live feedback
+  - Hierarchical aliases
+  - Added push/pop-focus for keyboard-navigable menus
+  - Many improvements to snapshots
+  - Added location info to crash snapshots
+  - Support for Gambit readtables
+  - Basic JSON support
+  - Multiple monitors support
+  - PDF generation support
+  - SMTP support
+  - Lots of improvements to the validation package
+  - Fixed long-standing applications losing their icon bug
+  - Basic bindings for libgit2
+  - Data format that unifies data and code
+
+UI
+  - Major optimization of merged cells implementation
+  - Optimized tab header horizontal drawing
+  - Optimized view scrolling
+  - Optimized tab-view header drawing
+  - Optimized tree view find-subdrawing
+  - Optimized tree header drawing
+  - Optimized tree drawing of clipped columns
+  - Rewrite and major simplication of the painting algorithm
+
+Jedi
+  - Jedi now a separate repository independant from Jazz
+  - New workspace for formatted editing
+  - Generalized versioned-directory
+  - Moved profiles to versioned .jedi dir
+  - Dynamic evaluation now collects export / import
+  - Ability to tie a stage to a certain guest model
+  - Files dropped now open in the dropped-to stage
+  - Reload dialog now only pops once for all modified files
+  - Opposite orientation zooming on shift double-click
+  - Git Explorer view to browse a repository
+  - Many improvements to the SQL workspace
+
+Projects
+  - Major rework of everything project related
+  - Projects are now pure data
+  - Project pathnames are now relative to the project
+  - Manager window to activate / deactivate projects
+  - Added Synchronize Content to workbench menu
+  - Search now uses projects structure
+  - Project configurations using traits
+
+Search
+  - Major recoding of everything search related
+  - Now cataloging a.b.X and a:b:c references
+  - Who-calls now automatically selects the first occurence
+  - Added declaration and selection searching
+  - Incremental search replace-all with replace highlighting
+  - Added n of m feedback to incremental search
+  - Added stage splitting support similar to emacs
+    c-x c-1, 2, 3, 0 using the new model / view text
+
+Text
+  - Added circular clipboard support to formatted text
+  - Refactored the text to a model / view architecture
+  - Mouse-copy auto tabulates inserted text for lisp
+  - Formatted text now close to fully functional
+
+Debugger
+  - Console closing
+  - Console persisting
+  - Added a local REPL to IDEs under debugger control
+  - Added terminate thread to the thread context menu
+  - New Problems-View that displays walker problems
+  - Evaluation now dynamically determines the processes
+  - ,(in <context> <expr>) and ,(scheme <expr>) commands
+  - Walk problems don't start an error level anymore
+  - Restart support in the threads view
+  - Can now break a running thread from the debugger
+
+Inspector
+  - Filtering
+  - Alphabetic / categorized natural ordering
+  - Backward / forward support
+  - Drill-down
+  - Open in new window
+  - Retrieve all missing elements
+
+Profiler
+  - Profiler now uses user/kernel/gc time
+  - Improved accuracy of statprof results
+
+Designer
+  - Major work on the UI designer
+  - New grid infrastructure
+  - Multiple undo support
+  - Port of the integrity management system
+  - Too many other improvements to list!
+
+Customisation
+  - Work on making every part of the UI skinnable
+  - Made the following UI elements user customisable:
+    - Bindings
+    - Colors
+    - Fonts
+    - Skins
+    - Text formats and styles
+    - Workspaces
+
+
+ON THE HORIZON
+
+We are finishing a multiple backend architecture for the
+code walker that we will release as 3.0. Here are some of
+the benefits of this new architecture:
+  - Simplify the code walker implementation
+  - Make the code walker optional at build time
+  - Make every part of Jazz modular and loadable as needed
+  - Give Jedi a direct interface to the code walker for
+    - Live reporting of syntax errors
+    - Live code evaluation
+    - ...
+  - Enable the creating of other backends than Gambit
+    - JavaScript mapping the Jazz OO system
+    - ...
