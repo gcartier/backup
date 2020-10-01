@@ -1,0 +1,908 @@
+;;;==============
+;;;  JazzScheme
+;;;==============
+;;;
+;;;; Together
+;;;
+
+
+;; WEBRTCDSP FLOW
+
+;; webrtcechoprobe
+;;   GstClockTime latency;
+;;   gint delay;
+;;   GstAdapter *adapter;
+;;   GstPlanarAudioAdapter *padapter;
+;; 
+;;   gst_webrtc_echo_probe_src_event
+;;     set latency
+;;     set delay
+;;   gst_webrtc_echo_probe_transform_ip
+;;     gst_buffer_copy
+;;     move the buffer timestamp to be in running time
+;;     gst_adapter_push
+;;     gst_adapter_flush
+;;   gst_webrtc_echo_probe_read
+;;     return delay
+
+;; webrtcdsp
+;;   GstAdapter *adapter;
+;;   GstPlanarAudioAdapter *padapter;
+;;   webrtc::AudioProcessing * apm;
+;;
+;;   gst_webrtc_dsp_analyze_reverse_stream
+;;     gst_webrtc_echo_probe_read
+;;     apm->set_stream_delay_ms (delay)
+;;     apm->ProcessReverseStream (data, config, config, data)
+;;     apm->AnalyzeReverseStream (&frame)
+;;   gst_webrtc_dsp_process_stream
+;;     apm->ProcessStream (&frame)
+;;   gst_webrtc_dsp_submit_input_buffer
+;;     gst_adapter_push
+;;   gst_webrtc_dsp_generate_output
+;;     gst_webrtc_dsp_take_buffer
+;;       gst_adapter_take_buffer
+;;     gst_webrtc_dsp_analyze_reverse_stream
+;;     gst_webrtc_dsp_process_stream
+
+
+;; oh wow is the info really all static so that
+;; being the coder I could just know the numbers
+;; and I also think the 261 -> 271 might be that
+;; the echo probe logic doesn't account for the
+;; audio src latency!?
+
+;; osxaudiosink = buffer-time + processing-deadline
+
+
+;; I don't understand that when I set silence
+;; to *not* being live and then the echo probe
+;; reports latency and delay of 0 the echo cancellation
+;; still gives a somewhat good result but but but there
+;; is still a delay for the mic to pick up the echo???
+
+
+;; I want, I need to understand and most probably fix
+;; "Received discont, clearing adapter."
+
+
+;; audiotestsrc being live and adding latency based
+;; on samplesperbuffer I think is a really great place
+;; to grok live latency like the one we introduce ourself
+
+
+;; was do-timestamp=true important in audiotestsrc???
+
+
+;; ******************* GOT IT ********************
+;; test-audio8 with silence, webrtcdsp reports
+;; values that finally make sense: latency .24
+;; delay 21ms which make the cancels the echo
+;; totally and corresponds to my experiments
+;; between 40 and 60
+;; if I remove the silence, interrestingly I
+;; still get an audio clock (maybe a fix in 1.18)
+;; but the echo cancellation is terrible even
+;; with delay = (+ 24 21)
+;; clearly there is some understanding of how
+;; timestamps or ... interact with webrtcdsp that
+;; needs to be groked and I'm convinced is the key
+;; ******************* GOT IT ********************
+
+;; is it the delay field in the echo probe!?!!
+
+
+;; OMG all that time I was running with an explicit
+;; new webrtc::DelayAgnostic (1) in the code and it
+;; was working so maybe the delay agnostic is a good
+;; thing!? but still needs a good latency / delay
+;; estimation!?!?!?
+
+
+;; fuck yes. the latency + delay being not 24 + 21
+;; but 241 + 21 !!! loops the loop vs the 271 numbers
+;; that where being reported by audiolatency!!!!!!!
+;; ---------------- OMG ----------------
+;; and when passing webrtcechoprobe latency=271 delay=0
+;; the echo cancellation is absolutely perfect!!!!!!
+;; even quite better than using 241 + 21 estimated by
+;; the echo probe logic
+
+
+;; need to understand deeply latency and delay for
+;; instance why does latency=241 delay=21 work as well
+;; as latency=262 delay=0 but latency=0 delay=262 does
+;; not work
+
+
+;; worst case scenario maybe I could use audiolatency
+;; programmatically in an automatic setup phase!?
+
+
+;; delay-agnostic mode really seems to not work even
+;; passing numbers close to correct
+
+
+;; Jitsi
+;; PJSIP
+;; Google Hangout
+;; Google Meet
+;; Skype
+;; Skype Meet Now
+;; Facebook Messenger
+
+
+;; look at JITSI, PJSIP, ... !?
+
+
+;; StartDebugRecording
+;; stream_has_echo
+;; enable_metrics
+;; enable_delay_logging
+;; EchoControlMobile
+
+
+;; #1 make audio1 work with source
+;; #2 confirm it still works totally
+;; #3 understand why it works launched
+;;    from jazz and not from gst-launch
+
+
+;; clearly the first step is to fully explore
+;; and understand using the old aec
+;; - really think about the formula
+;; - try giving a delay of .2!?
+;; - maybe have a property (or code) that enables
+;;   me to change the delay during execution!?
+;;   (not sure webrtc handles that!?)
+
+
+;; // Sets the |delay| in ms between AnalyzeReverseStream() receiving a far-end
+;; // frame and ProcessStream() receiving a near-end frame containing the
+;; // corresponding echo. On the client-side this can be expressed as
+;; //   delay = (t_render - t_analyze) + (t_process - t_capture)
+;; // where,
+;; //   - t_analyze is the time a frame is passed to AnalyzeReverseStream() and
+;; //     t_render is the time the first sample of the same frame is rendered by
+;; //     the audio hardware.
+;; //   - t_capture is the time the first sample of a frame is captured by the
+;; //     audio hardware and t_pull is the time the same frame is passed to
+;; //     ProcessStream().
+
+
+;; is it saying we don't need to audiomix!?
+;; audio_processing.h
+;; // Creates an APM instance. Use one instance for every primary audio stream
+;; // requiring processing. On the client-side, this would typically be one
+;; // instance for the near-end stream, and additional instances for each far-end
+;; // stream which requires processing. On the server-side, this would typically
+;; // be one instance for every incoming stream.
+
+
+;; in the latest webrtc code
+;; // Allow multi-channel processing of capture audio when AEC3 is active
+;; // or a custom AEC is injected..
+;; bool multi_channel_capture = false;
+
+
+;; RFC7874
+;; Endpoints SHOULD allow the entire AEC and/or the nonlinear processing
+;; (NLP) to be turned off for applications, such as music, that do not
+;; behave well with the spectral attenuation methods typically used in
+;; NLP.  Similarly, endpoints SHOULD have the ability to detect the
+;; presence of a headset and disable echo cancellation.
+
+
+;; git lfs for my backup!!?!
+
+
+;; GST-BUILD
+;; - install git lfs
+;; - install gstreamer latest packages
+;; - brew install libsoup (for examples!?)
+;; - comment out export MACOSX_DEPLOYMENT_TARGET=10.12
+;; - add (first) /Users/cartier/Devel/gstreamer/cerbero/build/dist/darwin_x86_64/lib/pkgconfig
+;;   to colon separated PKG_CONFIG_PATH
+;; - clone https://gitlab.freedesktop.org/gstreamer/cerbero.git
+;;   - ./cerbero-uninstalled bootstrap
+;;   - ./cerbero-uninstalled build webrtc-audio-processing
+;;   - edit build/dist/darwin_x86_64/lib/pkgconfig/webrtc-audio-processing.pc
+;;     and add missing -L -> Libs: -L${libdir} -lwebrtc_audio_processing
+;; - if I want to run the sources of webrtc-audio-processing for the moment
+;;   the only way I have found is to move libwebrtc_audio_processing.* from
+;;   /Library/Frameworks/GStreamer.framework/Versions/1.0/lib to another dir
+;;   in order for the source build to use the pkg-config location instead
+;; - clone https://gitlab.freedesktop.org/gstreamer/gst-build.git
+;;   - edit meson_options.txt
+;;     - set the following dependencies to disabled
+;;       - python
+;;       - libnice
+;;       - ges
+;;       - rtsp_server
+;;       - tls
+;;       - qt5
+;;       - introspection
+
+
+;; CODE
+;; - find a way to import live, zone, ... cleanly
+;;   and then scrap all the world hub shit
+;;   - this would also make refactoring live, ...
+;;     a lot easier
+;; - do the big renaming of zone -> world etc!?
+
+
+;;;
+;;;; PERSONAL
+;;;
+
+
+;; web backup of everything
+
+
+;; - robinet
+;; - alarmes de feu
+;; - appeler pour un contenant a composte
+;; - cancel cell phone
+;; - code pour declaration annuelle pour le condo
+
+
+;; MASTERCARD
+;; - blizzard
+;; - netflix
+;; - amazon prime
+;; - auth rev
+;; - github
+
+
+;; same password for 1password as for WoW
+
+
+;; moon rise kingdom sur prime (joel)
+
+
+;;;
+;;;; TOGETHER
+;;;
+
+
+;; <key>CFBundleIdentifier</key>
+;; <string>com.googlecode.iterm2</string>
+
+
+;; github sponsors seems really interesting
+;; - https://github.com/ExistentialAudio
+;; - vs Patreon!?
+;; - Sponsors
+;;   - zero fees to use the program
+
+
+;;;
+;;;; GSTREAMER
+;;;
+
+
+;; Lisp API that checks gstreamer error codes!?
+;; Use where possible lower level GStreamer apis
+;; that give more information about problems like
+;; using gst_pad_link vs gst_element_link
+
+
+;; rename bin-sink (sink part) to pan or ... as it
+;; is clearly *not* a sink!
+
+
+;; (osxaudiosink async: async name: "sink") YES!!!
+;; also solves the gst-appsrc having live, ... defaults
+
+
+;; put is-live=true stream-type=stream format=time
+;; statically into every appsrc string or find a way
+;; "livesrc" !? to ... whatever
+
+
+;; curious and I think it would be really good
+;; to not use gst_parse_launch and do it myself
+;; - I could have a macro gst that expands into
+;;   (let ()
+;;     (define (pipeline ...))
+;;     (define (bin ...))
+;;     (define (element ...))
+;;     body ...)
+;; - or maybe it's 2 toplevel macros
+;;   gst-pipeline and gst-bin
+
+
+;;;
+;;;; GAMBIT
+;;;
+
+
+;; MONOTONIC
+;; - the current implementation returns the monotonic time in
+;;   a u64vector which is not compatible with time being returned
+;;   in a f64vector
+
+
+;; NOT REBASED
+;; e27a168d Implement performance counters on Windows (*)
+;; 44fc9f58 Do not show Windows console on gambcomp (*)
+;; a54c5363 Add ##get-monotonic-time-real!
+;; 0253341c Use monotonic time for the scheduler
+;; c7b9a3d9 Fix bug in current monotonic time
+;; bf0506dd Revert performance counters real time hack
+;; cb7ba3d5 Fix some monotonic regressions
+;; a6a6aef1 Prevent system calls to open and opendir from being interrupted
+
+
+;; ##gambcomp -> ##gambuild
+;; ##parameterize -> ##parameterize1
+;; ##remove -> ##remq
+
+
+;; LATEST GAMBIT
+;; *** WARNING -- "##gambcomp" is not defined,
+;; ***            referenced in: ("build/develop/build/kernel/runtime/build.c")
+;; *** WARNING -- "##load-required-module" is not defined,
+;; ***            referenced in: ("build/develop/build/kernel/syntax/internal.c")
+;; *** WARNING -- "##parameterize" is not defined,
+;; ***            referenced in: ("~~lib/_gambitgsc.c")
+;; *** WARNING -- "##register-module-descrs-and-load!" is not defined,
+;; ***            referenced in: ("build/develop/build/kernel/syntax/internal.c")
+;; *** WARNING -- "##remove" is not defined,
+;; ***            referenced in: ("build/develop/build/kernel/runtime/unit.c")
+;; - so gensym cannot be used in a global
+;;   define? (anything else?)
+;; - redo the Do now show console commit
+;; - redo monotonic with Marc
+;; - check all good with perf counters commit gone
+;; - monotonic is a big one (have my mac side by side)
+;;   - compare code after merge is finished
+;; - see if ##floor-quotient if faster than
+;;   my quotient/
+
+
+;; GENSYM
+;; - adding a ^ at the end of gensyms is a hack around a crazy difficult
+;;   bug to debug that only happens using the build (e.g. it doesn't happen
+;;   if doing a -c) where it seems that the generated code ends up having a
+;;   mix of for example v1 and #:v1 (the v1 being from the inline expansion)
+;;   and this causes the Gambit compiler to emit twice the same symbol resulting
+;;   in redefined errors by the C compiler. this bug also seems to only happen
+;;   when building in debug or core. I plan on revisiting all this when Jazz has
+;;   moved back to the latest Gambit where this might be a bug that was fixed
+;; - also note that only doing a bare gensym in generate-symbol and
+;;   generate-global-symbol will bug the literals so that their global defines
+;;   will overrite one another
+
+
+;;;
+;;;; KEYS
+;;;
+
+
+;; 2987E710-097A-4748-A7B4-8221B2FF2CE8 - Guillaume - developer admin - devel test
+;; 71955DD9-B571-4046-B37D-5C9EE1182501 - Barbara   - developer admin - devel test
+;; D7FEC162-B856-4064-8A04-6FBE5FF9480B - Marcel    - developer       -       test
+;; A654A4EF-B5E9-4538-B13A-FE0A39150A9C - Francois  - developer       -       test
+;; 7B9D4264-2286-4530-8721-B32CDF4E9BF3 - Alexandra - <default>       -       test
+;; 344EC2CE-4ADF-4024-A514-AD6FD806AAC3 - Marc      - developer       -       test
+;; 80535CB9-5EBB-4C80-A67D-8120614EA548 - Frederic  - developer       - devel
+;; 87D51A8B-7157-41F4-95FC-1C2F06E4BD9B - Johann    - <default>       -       test
+;; B63F2AD3-228F-4242-AFB1-F99E842385C5 - Zathras   - developer       - devel test
+;; 638CFA7F-E5BD-4772-989E-12EAAA536AD8 - Jerome    - developer       - devel test
+;; 8FE3128A-710E-4255-8F0D-A4497B8E5A09 - Garibaldi - developer       -       test
+;; CBDAFBD9-2FF8-4A39-87A9-81FBC5F0CF02 - Ivanova   - developer admin - devel
+;; 99CA79BD-B6A3-4EFA-BAEF-166271C6C6D3 - Joel      - <default>       -       test
+;; 564BBE98-FB3D-4A5F-8D41-BD896A6D7056 - Kira      - <default>       - devel
+;; 335DFFBA-49E5-4D7E-A510-DDB1A135A9A9 - Klia      - <default>       - devel
+;; A06250E4-B0D2-4119-90AB-E4B84D2FFCF3 - Pixel     - <default>       - devel test
+;; D612E2C4-9DFC-4C8E-9DD9-90F27ED76067 - Dot       - developer       - <local mobile>
+;; 515734C8-1BEA-4922-853E-374E4FA51380 - Bip       - developer       - <local mobile>
+;; 800981B7-DACC-41A8-ACAE-94A1CED5C7AE - Bop       -                 - <local mobile>
+
+
+;;;
+;;;; RELEASE
+;;;
+
+
+;; PEOPLE
+;; - Marc Feeley (et filles)
+;; - Barbara Samson
+;; - Marcel Cote
+;; - Francois Magnan (et enfants)
+;; - Samuel Laferriere
+;; - Julian Herrera
+;; - Alain Marcotte
+;; - Jennifer McMillan & kids
+;; - Gambit mailing list
+
+
+;; MAYBE
+;; - Rosalie et chum
+;; - Jean-Francois Guay
+;; - John Yokela
+;; - Jackie
+;; - Joel
+;; - Nathalie
+;; - Anne
+;; - Isabelle
+;; - Jennifer
+;; - Andrew
+;; - May
+;; - Bernhard
+;; - Ernest
+
+
+;;;
+;;;; CRITICAL
+;;;
+
+
+;; GRAPHIC
+;; - ensure no render when minimized and validate that
+;;   cpu and gpu go down to minimal levels even on mac
+
+
+;; MENU
+;; - have I lost esc -> close central menu?
+
+
+;; SIMULATION
+;; - do I need to do a slicing for large elapses!?
+;; - I don't like the target going first in a strait line of
+;;   (vertex+& effective-velocity fall-velocity) and then doing
+;;   the gravity
+;;   - look at exactly how tick-actor does it
+;;   - the effective-velocity comment says fall-velocity is
+;;     already included in it! try to not add fall-velocity in
+;;     the simulation!?
+;;   - use the lookat change in the simulation too
+;;     - should position and lookat be treated as one with like
+;;       besier curve!?
+;; - another idea is to not hard set position when a position
+;;   comes in but again interpolate between real and simulated
+;;   positions (maybe converging faster when the become too far
+;;   from one another) (this is the interpolation part)
+;; - I also think (!?) determining the velocity should be done
+;;   by the receiver. Hmmm not sure. If it doesn't stop the gravity
+;;   code from working... and it's clean having velocity and fall
+;;   velocity I think!?
+;;   - that would for example make it so if someone is pushing
+;;     against a wall and sliding slowly, then the simulation
+;;     would determine that velocity and it would be smooth
+
+
+;; SMOOTHNESS
+;; #1 - jerks
+;; #2 * client interpolation
+;; #3 - animation transitions
+;; #4 - check regularity of critical tasks
+;;      - render, animate, player, ...
+;; #5 - load models in a thread so no jerk encountering
+;;      a new one showing a gray question mark until loaded
+;;      - this should have a big impact on the models showcase
+;;      - in general I see an asset task that in the background
+;;        retrieves requested assets with a proc when done like
+;;        replace model, play music, ...
+;;        - this will probably imply a lot of work to not jam
+;;          the presence port
+;;      - don't forget to unify with the admin send file /
+;;        request replay mecanism
+;; #6 - redo the model's part (always!?) of the critical
+;;      assets on login for the case of changing avatar
+
+
+;; ASSETS
+;; - could I implement a simple jas repository history
+;;   with the personal key of the person who made a change!?
+;; - need to really think about my setup-remote-index
+;;   for example does it work if we add modify remove
+;;   outside of Together and then come in
+;; - brainstorm handling of conflicts
+;;   - first solution is I think to have the last person
+;;     always win and make sure the semantics are very clear
+
+
+;; YOWNU
+;; - spawn
+;; - missile
+;; - music task!?
+;; - sound (song!?) task!?
+;; - dying from fall damage
+;; - glow player regression
+;; - search YOWNU
+
+
+;;;
+;;;; HIGH
+;;;
+
+
+;; SERVER
+;; - would be really cool to also have the server directory
+;;   at the documents level if not overriden by an explicit
+;;   servers/.../ dir!?
+
+
+;; WORKER
+;; - worker goes in the scripting phase
+;; - want to include the worker so I can tapp -debugger
+;;   - shouldn't the ignore-macosx be for all platforms
+;;     and a cond-expand decides the mac ignored!?
+;;   - windows has jazz (incorrect) and together
+;; - need to test and make robust using the worker on
+;;   the server and on mac and windows
+;; - does the worker have any mutex protection when it is
+;;   shared between multiple processes?
+
+
+;; HISTORY
+;; - when I go back to working on history it is
+;;   going to be a processor that gets paused!?!!!
+
+
+;; DAY
+;; - https://www.youtube.com/watch?v=POEzdiqEESo
+;;   what he does to smoothly transform between
+;;   two textures is very similar to what I need
+;;   to do to make day/night cycle smooth!?
+
+
+;; STREAM
+;; - a simple idea would be to make every server stream
+;;   available as a group (under the parent folder category)
+;;   that automatically streams that stream when someone
+;;   joins that group. we would get music and video and could
+;;   also have a help / learn section!
+
+
+;;;
+;;;; BLENDER
+;;;
+
+
+;; - will probably be important to support exporting
+;;   multiple objects
+;;   - maybe not all objects by default but simply export
+;;     all objects selected
+;; - would be awesome to export quads and so not lose them
+;;   if we export and reimport
+;; - try to draw the skeleton bone-style as proof-of-concept
+;;   - explore adjusting bone positions for ms3d models
+;; - dashgl is a really good example of binary io
+;; - the installer (or together!?) could install
+;;   and pull the blender repo somewhere in together
+;;   and then the user would not need to have git
+;;   installed and it could even be a command inside
+;;   together like "Install Blender Addon" or something
+
+
+;;;
+;;;; OTHER
+;;;
+
+
+;; DEPENDENCIES
+;; - C
+;; - Objective-C
+;; - GCC
+;; - Gambit
+;; - Cairo
+;; - Freetype
+;; - FontConfig
+;; - LibGIT2
+;; - OpenGL
+;;   - GLEW
+;; - GStreamer
+;;   - X264
+;;   - Vorbis
+;;   - WebRTCDSP
+;; - RNNoise
+;; - ZLib
+;; - MacOS
+;; - Windows
+;; - Linux
+;; - X11
+;; - x86 ARM ...
+;; - 32 64 bit ...
+;; - MinGW MinGW64 ...
+;; - GCloud
+;; - Systemd
+;; - Blender
+;; - Flutter
+;; - Android Studio
+;; - PkgConfig
+;; - Curl
+
+
+;; GITHUB
+;; - should i use pull requests and cleanup
+;;   most collaborators in jazz world ...!?
+
+
+;; SCRIPT
+;; - could it simply be that scripts run with
+;;   even lower priority than generation and then
+;;   I do not have to do anything about controlling
+;;   the resources (CPU) taken by scripts!?!!!?!
+
+
+;; BUILD
+;; - la 1er chose serait de recomprendre le role
+;;   du dgs et y-a peut-etre moyen de faire la meme
+;;   chose sans conflit d'ecriture
+
+
+;;;
+;;;; SCRIPTING
+;;;
+
+
+;; SCRIPT
+;; - name
+;; - say
+;; - draw
+;; - pane
+;; - position
+;; - lookat
+;; - emote
+;; - sound
+;; - add block
+;; - add entity
+;; - handler
+
+
+;; maybe if my first target was to create a 3d
+;; environment to explore scheme (with maybe just
+;; basic 3d commands) I would accomplish 2 things:
+;; - target a larger audience than just Gambit
+;; - not get into the complexities of a fully open
+;;   scripting language
+;; think about all involved before and talk to Marc
+;; about this idea
+
+
+;; the problem with text in entity script is not
+;; multisampling but using msaa and its form of
+;; screen door transparency
+
+
+;; think about inlined sourcification
+;; - we don't see the call site
+;; - we see call site local variables while seing
+;;   inlined code which is a bit surprising
+
+
+;;;
+;;;; OTHERS
+;;;
+
+
+;; ENERGY
+;; - Energy Impact
+;;   - CPU
+;;   - IDLE WAKE frequency
+;;   - GPU (3x)
+;;   - io writes
+;;   - packets sent / received
+;; Energy Impact
+;; - stop the render task when no skybox or video
+;;   - render occurs based on paints
+;;   - i think stopping and restarting the render task is a much
+;;     cleaner approach that this rendering-mutex shit
+;; - replace all the silly complexity aroud refresh
+;;   inside render by a clean task that once per second
+;;   invalidates the interface!!!
+;;   - and this will enable me to really stop the render
+
+
+;; CHAT
+;; - add times especially for waking up
+;; - have a way to know what you have read vs not read
+;; - have some previous context of circle
+;;   messages when joining
+;; - when in a circle and there are messages
+;;   in the gathering, the gathering icon changes
+;;   to show that and if you click the icon you
+;;   see the messages
+;;   - in other terms, all messages go in the same
+;;     chat but only the selected set is displayed
+;;     others pop an icon and are displayed when
+;;     selected
+;; - when we see a [name] maybe color to reflect
+;;   the location (gathering or circle) of the person
+;; - /w <to> doesn't report if <to> does not exists
+
+
+;; JAZZ
+;; - why am I not saving locations as unit names in snapshots!?
+
+
+;; LEAKS
+;; - gambit --enable-debug-log --enable-debug-alloc-mem
+;; - jazz (define track-leaks? #t) in .jazzini
+;; - mac MallocStackLoggingNoCompact=1 t gaia gl nolive
+;; - mac leaks -e g_quark_init -e gldCreateBuffer --fullStacks Together | more
+;; - opengl (gl-texture-count) (glVertexArrayCount) (glBufferCount)
+;; - gstreamer GST_TRACERS="leaks" GST_DEBUG="GST_TRACER:7"
+;; - gstreamer (gst_deinit)
+
+
+;; GSTREAMER EXPERT
+;; - echo cancellation
+;; - bug with audio clock
+;; - build on windows
+;; - have the simple bug9 with sin-latency
+;; - high quality video
+;; - opus on windows
+;; - wasapi thread com bug
+;; - nicolas dufresne
+
+
+;;;
+;;;; PROFILE
+;;;
+
+
+;; (setenv "HOME" "c:/Home") to test pristine conditions
+;; git branch --contains <commit>
+;; git show --pretty="" --name-status <commit>
+;; git log --pretty=format:"%s" --since=1.weeks > world.log
+;; git log --pretty=format:"%ai; %s" > world.log
+;; git log --pretty=format:"%H; %ai; %an; %s" > world.log
+;; 7z.exe a -t7z "Dawn of Space.7z" "C:\\Program Files (x86)\\Dawn of Space" -xr\!.git
+;; make deselect-gen-for-commit
+;; git clean -xfd
+;; locate (linux)
+;; lddtree (linux)
+;; (c-code "___ACTLOG_BEGIN_PS(TOTO,_);")
+;; (c-code "___ACTLOG_END_PS();")
+
+
+(module profile.together.Together jazz
+
+
+(import (irregex)
+        (jazz.application)
+        (jazz.application.services)
+        (jazz.catalog)
+        (jazz.clipboard)
+        (jazz.editor.lisp)
+        (jazz.ide)
+        (jazz.ide.development)
+        (jazz.graphic)
+        (jazz.io)
+        (jazz.markup)
+        (jazz.network)
+        (jazz.platform)
+        (jazz.profile)
+        (jazz.project)
+        (jazz.text)
+        (jazz.ui)
+        (jazz.ui.dialog)
+        (jazz.view)
+        (gaia)
+        (time))
+
+
+;;;
+;;;; Together
+;;;
+
+
+(class Together extends Gaia-Profile
+  
+  
+  (method override (user-code self text)
+    (let ((start (get-start text)))
+      (let ((expr (expr-at text start)))
+        (when (symbol? expr)
+          (when (= 0 (length (get-references (get-cataloguer) (->string expr))))
+            (let ((line (get-line start)))
+              (let ((range (new-range text (new Cell line 0) (new Cell line 0))))
+                (insert-string (get-model text) range "@too-big "))))))))
+  
+  
+  @w
+  (method override (test self)
+    (let ((table (make-table test: equal?)))
+      (define (scan dir)
+        (iterate-directory dir
+          (lambda (file)
+            (table-set! table (get-extension file) #t))
+          files?: #t
+          directories?: #f
+          recursive?: #t))
+      
+      (scan (cd))
+      (for-each debug (table-keys table))))
+  
+  
+  @w
+  (method override (test self)
+    (iterate-directory (cd)
+      (lambda (file)
+        (when (equal? (get-extension file) "Png")
+          (let ((base (get-base file)))
+            (rename file (new-brother file (add-extension base "png")))
+            (debug base))))
+      files?: #t
+      directories?: #f
+      recursive?: #t))
+  
+  
+  @w
+  (method override (test self)
+    (let ((src-dir (cd)))
+      (let ((dst-dir (new-directory src-dir "_SVG")))
+        (create-directories dst-dir)
+        (iterate-directory src-dir
+          (lambda (dir)
+            (let ((name (get-name dir)))
+              (let ((filename (add-extension name "svg")))
+                (let ((svg (new-file dir filename)))
+                  (when (exists? svg)
+                    (let ((dest (new-file dst-dir filename)))
+                      (debug filename)
+                      (duplicate svg dest)))))))
+          files?: #f
+          directories?: #t
+          recursive?: #f)))
+    (debug 'DONE))
+  
+  
+  (method override (test1 self)
+    (set-selection % (list (new Cell 0 0)))
+    (debug (get-selection %)))
+  
+  
+  (method override (test2 self)
+    (set-selection % (list (new Cell 0 1)))
+    (debug (get-selection %)))
+  
+  
+  (method (clean-ds_store self (dry-run?: dry-run? #f))
+    (let ((dir (choose-directory))
+          (count 0))
+      (iterate-directory dir
+        (lambda (file)
+          (when (filename=? (get-name file) ".DS_Store")
+            (user-message "Deleting {a}..." (parse file))
+            (unless dry-run?
+              (delete file))
+            (increase! count)))
+        files?: #t
+        directories?: #f)
+      (user-message "Deleted {a} .DS_Store" count))))
+
+
+(register-profile-class Together)
+
+
+;;;
+;;;; Expression
+;;;
+
+
+(define-expression define-jiri
+  declaration?: #t
+  tabulate: 1
+  walk: :define-macro
+  name-mangler: ("jiri"))
+
+
+(define-expression instance
+  namespace?: #t
+  declaration?: #t
+  anonymous?: #t
+  modifiers: ()
+  tabulate: -1
+  walk: :script)
+
+
+(define-expression handle
+  declaration?: #t
+  tabulate: 1
+  walk: :define))
