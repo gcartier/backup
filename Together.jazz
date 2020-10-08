@@ -6,6 +6,166 @@
 ;;;
 
 
+;; install gstreamer 1.16 to /Library/Frameworks/GStreamer1.16
+;; 1.18 same ... so we can compare!?
+
+
+;; $ clang++ -std=c++17 -stdlib=libc++ obj/libwebrtc.a   -I../.. -Igen -I../../third_party/abseil-cpp -I../../third_party/libyuv/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googlemock/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googletest/include -I../../third_party/abseil-cpp   -framework Cocoa -framework Foundation -framework IOKit         -framework Security -framework SystemConfiguration         -framework ApplicationServices -framework CoreServices         -framework CoreVideo -framework CoreAudio -framework AudioToolbox         -framework QTKit -framework AVFoundation -framework CoreMedia   main.cc -o main
+;; 
+;; $ ./main
+;; (audio_processing_impl.cc:272): Injected APM submodules:
+;; Echo control factory: 0
+;; Echo detector: 0
+;; Capture analyzer: 0
+;; Capture post processor: 0
+;; Render pre processor: 0
+;; (audio_processing_impl.cc:529): AudioProcessing::ApplyConfig: AudioProcessing::Config{
+;;   pipeline: {maximum_internal_processing_rate: 48000, multi_channel_render: 0, , multi_channel_capture: 0},
+;;   pre_amplifier: { enabled: 0, fixed_gain_factor: 1 },
+;;   high_pass_filter: { enabled: 1 },
+;;   echo_canceller: { enabled: 1, mobile_mode: 0, enforce_high_pass_filtering: 1 },
+;;   noise_suppression: { enabled: 0, level: Moderate },
+;;   transient_suppression: { enabled: 0 },
+;;   voice_detection: { enabled: 1 },
+;;   gain_controller1: { enabled: 1, mode: AdaptiveAnalog, target_level_dbfs: 3, compression_gain_db: 9, enable_limiter: 1, analog_level_minimum: 0, analog_level_maximum: 255 },
+;;   gain_controller2: { enabled: 1, fixed_digital: { gain_db: 0 }, adaptive_digital: { enabled: 0, level_estimator: Rms, use_saturation_protector: 1, extra_saturation_margin_db: 2 } },
+;;   residual_echo_detector: { enabled: 1 },
+;;   level_estimation: { enabled: 0 } }
+;; (agc_manager_direct.cc:69): [agc] GetMinMicLevel
+;; (agc_manager_direct.cc:73): [agc] Using default min mic level: 12
+;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
+;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
+;;  807, 11249, 10073, 15658, 12930, 3272, 3544, 10878, 9923, 5709, 12440, 14165, 4492, 3042, 7987, 2503, 2327, 3729, 2840, 6612,
+;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
+;; result = 0
+;;  807, 11249, 10073, 15658, 12930, 3272, 3544, 10878, 9923, 5709, 12440, 14165, 4492, 3042, 7987, 2503, 2327, 3729, 2840, 6612,
+;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
+;; (agc_manager_direct.cc:294): [agc] Initial GetMicVolume()=0
+;; (agc_manager_direct.cc:299): [agc] Initial volume too low, raising to 12
+;;  19937, 19937, 25115, 25115, 4602, 4602, 14415, 14415, 1109, 1109, 6256, 6256, -5638, -5638, 5288, 5288, 20250, 20250, 4826, 4826,
+
+
+
+;; is_debug
+;; gn gen out/Release --args='use_rtti=true rtc_include_tests=false use_custom_libcxx=false'
+;; -> not sure the use_rtti=true is needed (need to try it without)
+
+
+;; clang++ -std=c++17 obj/libwebrtc.a   -I../.. -Igen -I../../third_party/abseil-cpp -I../../third_party/libyuv/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googlemock/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googletest/include -I../../third_party/abseil-cpp   -framework Cocoa -framework Foundation -framework IOKit         -framework Security -framework SystemConfiguration         -framework ApplicationServices -framework CoreServices         -framework CoreVideo -framework CoreAudio -framework AudioToolbox         -framework QTKit -framework AVFoundation -framework CoreMedia   main.cc -o main
+
+
+;; gn args out/Default/ --list --short
+
+
+;; clang++ -dynamiclib -undefined suppress -flat_namespace -Wl,-all_load libaec3.a libaudio_processing.a -o libwebrtcdsp.dylib
+
+;; clang++ -std=c++17 -L. -lwebrtcdsp -I../.. main.cc -o main
+
+
+;; WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR
+;; The transient suppressor functionality in the audio processing module is not always used.
+;; If you wish to exclude it from the build in order to preserve binary size, then define the
+;; preprocessor macro WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR. If you use GN, you can just set the
+;; GN argument rtc_exclude_transient_suppressor to true and GN will define the macro for you.
+
+
+;; if (rtc_enable_symbol_export || is_component_build) {
+;;    defines = [ "WEBRTC_ENABLE_SYMBOL_EXPORT" ]
+;; }
+
+
+;; clang++ -dynamiclib -undefined suppress -flat_namespace -Wl,-all_load libaec3.a -o xxx.dylib
+
+;; gcc -shared -o libget_zero_shared.so \
+;; -Wl,--whole-archive                  \
+;; libget_zero_static.a                 \
+;; -Wl,--no-whole-archive
+
+
+;; forgot opus has integrated fec!
+
+
+;; #1 **********************************************
+;; try aec3 linking with libwebrtc.a first
+;; *************************************************
+
+
+;; how does the webrtc (not dsp) plugin of gstreamer
+;; link against webrtc? -> oh ya right, there is no
+;; webrtc plugin, it's protocol-based plugins...
+
+
+;; try to build the webrtc-builds sample app against
+;; my already built google/webrtc !?
+
+
+;; local
+;; 3065069275 (world.audio:Audio-Sink:consume-audio world.audio:World-Audio:receive-server-audio world.audio:World-Audio:receive-audio world.streaming:client-audio-consumer jazz.stream:Stream-Sink:consume jazz.language.runtime.functional:register-site %%world.profiling:with-site world.profiling:with-site world.profiling:advise-site world.audio:File-Stream-Audio-Src:audio-loop world.task:with-task world.task:with-task world.task:with-task world.task:with-task jazz.debuggee:with-current-loop jazz.debuggee:with-current-loop world.task:with-task world.task:with-task world.task:with-task world.audio:Audio-Src:task-start world.task:Task:initialize ##thread-execute-and-end!)
+
+;; remote
+;; 170611735941 (world.audio:Audio-Sink:consume-audio world.audio:World-Audio:receive-server-audio world.audio:World-Audio:receive-audio world.client.udp:UDP-Receive-Channel:present-audio jazz.language.runtime.functional:register-site %%world.profiling:with-site world.profiling:with-site world.profiling:advise-site world.client.udp:UDP-Receive-Channel:process-audio-loop world.task:with-task world.task:with-task world.task:with-task world.task:with-task jazz.debuggee:with-current-loop jazz.debuggee:with-current-loop world.task:with-task world.task:with-task world.task:with-task world.client.udp:UDP-Receive-Channel:process-loop world.client.udp:UDP-Receive-Channel:initialize world.task:Task:initialize ##thread-execute-and-end!)
+
+
+;; BARBARA
+;; - timing!?
+;; - discontinuities!? (dropped packets)
+
+
+;; I will want both the echo canceller and the rndenoiser
+;; to be able to be turned on or off from together
+
+
+;; revisit the discont-wait: 0
+
+
+;; there is something nagging in the time-adapter in
+;; how we choose the initial timestamp-offset which
+;; could end up being really off if the first buffer
+;; timestamp we receive is really off which is often
+;; the case before things settle down. maybe I should
+;; have some progressive something to start!?
+
+
+;; there is still the mystery of is it an audio clock
+;; or not that gets allocated in together?
+
+
+;; there was some residual echo on the small laptop
+;; because the microphone input volume was set at max.
+;; reducing it to about 60% fixed it almost completely
+
+
+;; OMG this the clock ***changing*** from a system
+;; to an audio clock might be a bug fix of 1.18!?!!?!
+;; -> finish debugging and getting an audio clock
+
+
+;; really grok once and for all if adder is a potential
+;; candidate
+
+
+;; fix the crash that only happened when barbara started the group
+;; first and was due to her having sound notification on so that the
+;; ping sound was played and this trigger a bug of sound incorrectly
+;; calling consume-audio in that context
+
+
+;; osxaudiosink =
+;;   buffer-time 200000 (.2s) +
+;;   processing-deadline 20000000 (.02s)
+;;   = .22s
+;; audiotestsrc samplesperbuffer=480
+;;   = .01s (is also the delay)
+
+
+;; is it saying we don't need to audiomix!? (audio_processing.h)
+;; // Creates an APM instance. Use one instance for every primary audio stream
+;; // requiring processing. On the client-side, this would typically be one
+;; // instance for the near-end stream, and additional instances for each far-end
+;; // stream which requires processing. On the server-side, this would typically
+;; // be one instance for every incoming stream.
+
+
 ;; WEBRTCDSP FLOW
 
 ;; webrtcechoprobe
@@ -13,6 +173,11 @@
 ;;   gint delay;
 ;;   GstAdapter *adapter;
 ;;   GstPlanarAudioAdapter *padapter;
+;;
+;;   info->rate = 48000
+;;   info->bpf = 4
+;;   self->period_samples = info->rate / 100 = 480
+;;   self->period_size = self->period_samples * info->bpf = 1920
 ;; 
 ;;   gst_webrtc_echo_probe_src_event
 ;;     set latency
@@ -46,83 +211,6 @@
 ;;     gst_webrtc_dsp_process_stream
 
 
-;; oh wow is the info really all static so that
-;; being the coder I could just know the numbers
-;; and I also think the 261 -> 271 might be that
-;; the echo probe logic doesn't account for the
-;; audio src latency!?
-
-;; osxaudiosink = buffer-time + processing-deadline
-
-
-;; I don't understand that when I set silence
-;; to *not* being live and then the echo probe
-;; reports latency and delay of 0 the echo cancellation
-;; still gives a somewhat good result but but but there
-;; is still a delay for the mic to pick up the echo???
-
-
-;; I want, I need to understand and most probably fix
-;; "Received discont, clearing adapter."
-
-
-;; audiotestsrc being live and adding latency based
-;; on samplesperbuffer I think is a really great place
-;; to grok live latency like the one we introduce ourself
-
-
-;; was do-timestamp=true important in audiotestsrc???
-
-
-;; ******************* GOT IT ********************
-;; test-audio8 with silence, webrtcdsp reports
-;; values that finally make sense: latency .24
-;; delay 21ms which make the cancels the echo
-;; totally and corresponds to my experiments
-;; between 40 and 60
-;; if I remove the silence, interrestingly I
-;; still get an audio clock (maybe a fix in 1.18)
-;; but the echo cancellation is terrible even
-;; with delay = (+ 24 21)
-;; clearly there is some understanding of how
-;; timestamps or ... interact with webrtcdsp that
-;; needs to be groked and I'm convinced is the key
-;; ******************* GOT IT ********************
-
-;; is it the delay field in the echo probe!?!!
-
-
-;; OMG all that time I was running with an explicit
-;; new webrtc::DelayAgnostic (1) in the code and it
-;; was working so maybe the delay agnostic is a good
-;; thing!? but still needs a good latency / delay
-;; estimation!?!?!?
-
-
-;; fuck yes. the latency + delay being not 24 + 21
-;; but 241 + 21 !!! loops the loop vs the 271 numbers
-;; that where being reported by audiolatency!!!!!!!
-;; ---------------- OMG ----------------
-;; and when passing webrtcechoprobe latency=271 delay=0
-;; the echo cancellation is absolutely perfect!!!!!!
-;; even quite better than using 241 + 21 estimated by
-;; the echo probe logic
-
-
-;; need to understand deeply latency and delay for
-;; instance why does latency=241 delay=21 work as well
-;; as latency=262 delay=0 but latency=0 delay=262 does
-;; not work
-
-
-;; worst case scenario maybe I could use audiolatency
-;; programmatically in an automatic setup phase!?
-
-
-;; delay-agnostic mode really seems to not work even
-;; passing numbers close to correct
-
-
 ;; Jitsi
 ;; PJSIP
 ;; Google Hangout
@@ -132,82 +220,16 @@
 ;; Facebook Messenger
 
 
-;; look at JITSI, PJSIP, ... !?
-
-
-;; StartDebugRecording
-;; stream_has_echo
-;; enable_metrics
-;; enable_delay_logging
-;; EchoControlMobile
-
-
-;; #1 make audio1 work with source
-;; #2 confirm it still works totally
-;; #3 understand why it works launched
-;;    from jazz and not from gst-launch
-
-
-;; clearly the first step is to fully explore
-;; and understand using the old aec
-;; - really think about the formula
-;; - try giving a delay of .2!?
-;; - maybe have a property (or code) that enables
-;;   me to change the delay during execution!?
-;;   (not sure webrtc handles that!?)
-
-
-;; // Sets the |delay| in ms between AnalyzeReverseStream() receiving a far-end
-;; // frame and ProcessStream() receiving a near-end frame containing the
-;; // corresponding echo. On the client-side this can be expressed as
-;; //   delay = (t_render - t_analyze) + (t_process - t_capture)
-;; // where,
-;; //   - t_analyze is the time a frame is passed to AnalyzeReverseStream() and
-;; //     t_render is the time the first sample of the same frame is rendered by
-;; //     the audio hardware.
-;; //   - t_capture is the time the first sample of a frame is captured by the
-;; //     audio hardware and t_pull is the time the same frame is passed to
-;; //     ProcessStream().
-
-
-;; is it saying we don't need to audiomix!?
-;; audio_processing.h
-;; // Creates an APM instance. Use one instance for every primary audio stream
-;; // requiring processing. On the client-side, this would typically be one
-;; // instance for the near-end stream, and additional instances for each far-end
-;; // stream which requires processing. On the server-side, this would typically
-;; // be one instance for every incoming stream.
-
-
-;; in the latest webrtc code
-;; // Allow multi-channel processing of capture audio when AEC3 is active
-;; // or a custom AEC is injected..
-;; bool multi_channel_capture = false;
-
-
-;; RFC7874
-;; Endpoints SHOULD allow the entire AEC and/or the nonlinear processing
-;; (NLP) to be turned off for applications, such as music, that do not
-;; behave well with the spectral attenuation methods typically used in
-;; NLP.  Similarly, endpoints SHOULD have the ability to detect the
-;; presence of a headset and disable echo cancellation.
-
-
-;; git lfs for my backup!!?!
-
-
 ;; GST-BUILD
 ;; - install git lfs
 ;; - install gstreamer latest packages
-;; - brew install libsoup (for examples!?)
-;; - comment out export MACOSX_DEPLOYMENT_TARGET=10.12
-;; - add (first) /Users/cartier/Devel/gstreamer/cerbero/build/dist/darwin_x86_64/lib/pkgconfig
-;;   to colon separated PKG_CONFIG_PATH
 ;; - clone https://gitlab.freedesktop.org/gstreamer/cerbero.git
 ;;   - ./cerbero-uninstalled bootstrap
 ;;   - ./cerbero-uninstalled build webrtc-audio-processing
 ;;   - edit build/dist/darwin_x86_64/lib/pkgconfig/webrtc-audio-processing.pc
 ;;     and add missing -L -> Libs: -L${libdir} -lwebrtc_audio_processing
+;;   - add (first) /Users/cartier/Devel/gstreamer/cerbero/build/dist/darwin_x86_64/lib/pkgconfig
+;;     to colon separated PKG_CONFIG_PATH
 ;; - if I want to run the sources of webrtc-audio-processing for the moment
 ;;   the only way I have found is to move libwebrtc_audio_processing.* from
 ;;   /Library/Frameworks/GStreamer.framework/Versions/1.0/lib to another dir
@@ -224,6 +246,11 @@
 ;;       - introspection
 
 
+;;;
+;;;; TOGETHER
+;;;
+
+
 ;; CODE
 ;; - find a way to import live, zone, ... cleanly
 ;;   and then scrap all the world hub shit
@@ -238,6 +265,8 @@
 
 
 ;; web backup of everything
+
+;; git lfs for my backup!!?!
 
 
 ;; - robinet
