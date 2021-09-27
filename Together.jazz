@@ -6,218 +6,1336 @@
 ;;;
 
 
-;; install gstreamer 1.16 to /Library/Frameworks/GStreamer1.16
-;; 1.18 same ... so we can compare!?
+;; build the dlls on windows for the gap fix
 
 
-;; $ clang++ -std=c++17 -stdlib=libc++ obj/libwebrtc.a   -I../.. -Igen -I../../third_party/abseil-cpp -I../../third_party/libyuv/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googlemock/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googletest/include -I../../third_party/abseil-cpp   -framework Cocoa -framework Foundation -framework IOKit         -framework Security -framework SystemConfiguration         -framework ApplicationServices -framework CoreServices         -framework CoreVideo -framework CoreAudio -framework AudioToolbox         -framework QTKit -framework AVFoundation -framework CoreMedia   main.cc -o main
+;; clean compilation warnings
+
+
+;; headphones plug/unplug on windows
+
+
+;;;
+;;;; WORLD
+;;;
+
+
+;; LOST
+;; - perlin
+;; - planets
+;; - procedural
+;; - heightmap
+;; - fbx
+;; - obj
+;; - triangulate
+
+
+;; *******************************************************
+;; really the only goal of gaea or any similar effort is
+;; to clean the code base of together and make it simple
+;; and clean. the idea is that the world framework doesn't
+;; do everything but what it does is clear and clean. and
+;; then it starts making sense making it available in gaea
+;; *******************************************************
+
+
+;; remove everything obsolete
+;; gaea
+
+
+;;;
+;;;; PERSONAL
+;;;
+
+
+;; foundation on apple tv
+
+;; moon rise kingdom sur prime (joel)
+
+
+;;;
+;;;; LEONARD
+;;;
+
+
+;; WEDNESDAY
+;; - try the university network but with leonard in low
+;; - also try his phone in low
+
+
+;; - durée, de quand à quand
+;; - nombres d'heures
+;; - rémunération?
+;; - compagnie?
+
+
+;; - complexity of jazz's core layer that includes
+;;   the object system, the code walker, the module
+;;   system and more (complexity of integrating with
+;;   syntax)
+;; - primitive or r7rs modules
+;; - i think a simple approach using primitive as marc
+;;   had outlined would be best to start and maybe then
+;;   to a proof-of-concept of reengineering jazz over
+;;   gambit's r7rs modules
+;; - how does gambit know what modules to compile (jazz
+;;   uses explicit metadata coupled with protected decl)
+;; - maybe the autoload mecanism is replaced by gambit's
+;;   support for circular dependencies
+;;   - need to understand exactly how that works!
+;; - the need of the type system to have access to
+;;   a prototype version of imports
+
+
+;; probably approach the problem more as also redoing the
+;; whole kernel thing based on Gambit's module system as a
+;; first pass
+
+
+;; - repository
+;;   - search path
+;;   - can contain binaries and source
+;; - package
+;; - module
+;; - dialect
+;; - import
+;; - export
+;; - phase
+;; - only
+;; - except
+;; - prefix
+;; - rename
+;; - autoload
+;; - cond
+;; - native
+;; - public to auto export
+;; - export other module
+;; - a or module:a to delay module load
+;; - everything can be moved with no path burned
+;; - support for multiple configurations
+;; - common lisp approach to macros / syntax
+;; - safety / type system
+;; - crash handler
+
+
+;; build system
+
+
+;; gaea / earth
+
+
+;;;
+;;;; GAEA
+;;;
+
+
+;; OBJECTIVES
+;; - no autoload
+;; - 100% clean dependencies in gaea
+;; - start work on clean jazz dependencies
+;; - explore latest gambit integration
+;; - try to use a metal inspired architecture!?
+;; - explore feasability of a metal backend!?
+
+
+;;;
+;;;; PRESENCE
+;;;
+
+
+;; presence mode where we are not displayed or maybe
+;; displayed really at the bottom and everyone else is
+;; as in real life in (more than) a semi circle above
+
+
+;; - start with a proof-of-concept of doing a presence
+;;   circle and try to guess who the other is looking at
+
+
+;; - enable knowing the direction you are looking at
+;; - clicking on someone just looks in that direction
+;;   (and maybe enlarges the person)
+;; - enables directional audio in relation to where
+;;   you are looking at!?!!
+
+
+;;;
+;;;; SYNC
+;;;
+
+
+;; we can still get some desync (for instance
+;; after running some speed test)
+
+
+;; udp-video-present should be audio latency -
+;; video latency, e.g. .27 - .05 = .22
+
+
+;; CAMERA
+;; - the new using the running time for camera
+;;   may have introduced a tiny desync between
+;;   audio and video
+;; - need to figure out the thing about turning my
+;;   camera off and on (put some debugging code in
+;;   avfvideosrc to make sure it is there that it's
+;;   happening)
+;;   - and it would seem that if I then override to
+;;     .037 then the sync is good even when the reported
+;;     latency between dts and pts is .2ish
+
+
+;;;
+;;;; LATENCY
+;;;
+
+
+;; maybe when going down I should send all the video
+;; content!? or maybe only the iframe if one present!?
+
+
+;; when all is working I should be able to remove
+;; all the (max 0 <ts>) patches everywhere
+
+
+;; maybe we take less vs more time to go down depending
+;; on the size of the wave, e.g. we go down immediately
+;; from a 2s wave and take a really long time to go down
+;; from a tiny perturbation (probably not even a good
+;; idea if we start using vad for going down)
+
+
+;; GAZAA
+;; - extract all nugets from gazaa
+;;   - maybe my gritches because of my mac going brrzzz
+;;     on my routes would be fixed by gazaa's not doing
+;;     any too small changes!?
+
+
+;;;
+;;;; OTHER
+;;;
+
+
+;; close circlingottawa yet again and redo buckets
+;; (this implies changing the installer)
+
+
+;; new together takes more cpu / idle wake ups when
+;; in the visualizer than the base one
+
+
+;; with the new understanding of platformTestCamera code, I can probably
+;; make the user experience a lot more robust to declining, etc, ...
+
+
+;; should have a requirements document which would
+;; also include the reasons for a requirement like
+;; why mac os x 10.12
+
+
+;; having the possibility of having encoding u8
+;; buffers auto grow would make the screen share
+;; a lot easier to understand and be a good thing
+;; all around
+
+
+;; THROTTLE
+;; - decouple upload vs download quality
+;; - when decoupled, I might be uploading in
+;;   high even if circle is large and so it
+;;   becomes easy to show a high quality in
+;;   focused mode
+;; - received-ack could also be a place to
+;;   quickly lower upload quality as circle
+;;   size grows!?
+;; - with tcp channel on/off it becomes easy
+;;   to only have people with audio on being
+;;   connected to the mixer
+
+
+;; GPU
+;; - post processing 20%
+;; - render-outputs 2.5%
+;; - mainbar & interface 5% (!?)
+;;   - even when not changing
+;; - glClear 4% (!?)
+;; - OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG OMG
+;;   - with just the basic i'm at 20% with render rate
+;;     being 30 and if i augment the render rate to 60
+;;     the GPU drops to 10%
+;;     - and then after being stable at 10% for minutes
+;;       it jumped to 30%. oh and now back to 10%
+
+
+;; RENDER
+;; - the small jam in the self video that happens when
+;;   turning mic off and on is due to that code having the
+;;   task mutex and the rendering needing the task mutex
+;;   - is there a way (what does that mean) to make it so
+;;     the rendering of videos do not need the task mutex!?
+;;   - note that this does not jam the sending of the
+;;     camera packet which should be smooth!?
+
+
+;; STREAMS
+;; - add an icon at top
+;; - show entry for mp4 if not preprocessed yet
+;; - when click just preprocess it and show
+;;   "preprocessing"
+;; - if not playable because too high don't
+;;   preprocess for nothing and user message...
+;; - maybe then the generated files could go into a separate
+;;   folder so users have a clean experience
+
+
+;; OVERFLOW
+;; - barbara solid bar of ring overflows
+
+
+;; WEBSITE
+;; - add andres mac virus-checker image
+
+
+;;;
+;;;; NOTARIZATION
+;;;
+
+
+;; copy install/together-sirius-test to notary
+;; cd notary
+;; rm -rf together-sirius-test.app/.git
+;; /usr/bin/xattr -r -c -s together-sirius-test.app
+;; ll together-sirius-test.app/Contents/Libraries
+;; /usr/bin/codesign --force --options runtime --entitlements Entitlements.plist --timestamp --verbose=4 -s "Developer ID Application: Guillaume Cartier (R74FF3EJWG)" --digest-algorithm=sha1,sha256 together-sirius-test.app/Contents/Libraries/libcairo.2.dylib
+;; <repeat for each library> ...
+;; /usr/bin/codesign --force --options runtime --entitlements Entitlements.plist --timestamp --verbose=4 -s "Developer ID Application: Guillaume Cartier (R74FF3EJWG)" --digest-algorithm=sha1,sha256 together-sirius-test.app
+;; /usr/bin/ditto -c -k --keepParent together-sirius-test.app together-sirius-test.zip
+;; /usr/bin/xcrun altool --notarize-app -f together-sirius-test.zip --primary-bundle-id com.togethersphere.TogetherSirius -u gucartier@gmail.com -p @keychain:Together\ Test --output-format xml
+;; /usr/bin/xcrun altool --notarization-info <key-returned-from-previous-command> -u gucartier@gmail.com -p @keychain:Together\ Test
+;; /usr/bin/xcrun stapler staple -v together-sirius-test.app
+
+
+;; TESTING
+;;   codesign -vvv --deep --strict together-sirius-test.app
+
+
+;; NOTES
+;; - when the codesigning fails, there will be a LogFileURL that can be pasted into a browser to have a full log
+
+
+;; TODO
+;; - an env var for the app signing identity would make perfect sense and
+;;   go well in .jaz and that way it stays private and is not in the repo
+
+
+;;;
+;;;; DMG
+;;;
+
+
+;; #1
+;; In Disk Utility
+;;   New Image -> Blank Image
+;;     Save As    : Together Template
+;;     Name       : Together
+;;     Size       : Large enough to contain the application (200 MB)
+;;     Format     : Mac OS Extended (Journaled) (APFS is High Sierra only)
+
+;; #2
+;; Click Create that will automatically mount the image
+
+;; #2.5
+;; I THINK I JUST FIGURED THE THING THAT MAKES THE TEMPLATE DMG LOSE
+;; EVERYTHING. IT'S MOUNTING IT AND THEN JUST UNMOUNTING IT FOR SOME
+;; REASON WITH CLICKING ON IT.
+
+;; #3
+;; Copy together-sirius-test from notary to the image and rename it Together Test
+;; Copy the background directory
+;; Make a link to the Applications directory
+;;   cd /Volumes/Together
+;;   ln -s /Applications Applications
+
+;; #4
+;; View as Icons
+;; Show View Options
+;;   Always open in icon view
+;;   Icon size 128x128
+;;   Background picture -> double click to select (might have to try twice)
+;;   Rename background directory to .background
+;;   Adjust placement of icons
+;;   Adjust window size
+;;   Hide toolbar
+;;   Hide sidebar
+
+;; #5
+;; cd (so disk can be ejected)
+
+;; #6
+;; From another Finder window eject the disk image
+
+;; #7
+;; In Disk Utility
+;;   Images -> Convert
+;;     Save As : Together Test
+
+;; #8
+;; Mount Together to check that it worked
+
+
+;;;
+;;;; SCRIPTING
+;;;
+
+
+;; BUGS
+;; - the texture id #f bug
+;; - the explore-error bug in the processor
+;; - figure out why typing space can take so much time
+;; - need to not crash when an error occurs in an event
+;;   mouse, keyboard, draw, ...
+;; - make 100% sure that scripting can only occur
+;;   client side
+
+
+;;;
+;;;; TOGETHER
+;;;
+
+
+;; DEVICES
+;; - might want to update the devices menu each time on click
+;;   as it is super natural for a user the stay in the dialog
+;; - some devices might turn out to be really strange
+;;   - use a very defensive programming style
+;; - would help if I close the audio when in the gathering
+;; - review cached stuff around devices (resolutions)
+;;   - cache-microphone-device-names etc are wrong!?!!
+;; - how does all this play out when no tcc authorization
+;; - microphone needs more testing because of acquire / release
+;; - not forget freeing device / devices memory
+;; - investigate adding camera resolutions combo
+
+
+;; FRAMERATE
+;; - skipping when moving slowly in standard
+;;   framerate=(fraction)5000000/208333
+;; - as framerate can be dynamically changed
+;;   could we lower it as the size of the circle
+;;   grows!? (keep good for focused view)
+;;   -> in a way someone streaming in medium is
+;;      different than someone in standard going
+;;      in medium because of circle size!?
+;; - the old framerate progression was
+;;   20 15 12  8 vs now we have
+;;   30 24 18 12
+;; - with these we go for camera all from
+;;   65% 26% to
+;;   45% 18%
+
+
+;; THREADS
+;; - gst_task_configure_name
+;; - maybe change the gstreamer code that sets thread name
+;;   to instead capture the os thread (or id on windows or
+;;   whatever) and cleanup all my shit around that stuff
+;; - looking at Barbara's crash, I'd say calling a gstreamer
+;;   function on the bin when that bin can be gone is totally
+;;   evil. why not simply cache the name in a table or ... !?
+
+
+;; THROTTLE
+;; - plot-throttle-rate getting an invalid reason???
+;;   -> remove the quick patch when fixed
+
+
+;; CONGESTION
+;; - server upload latency (or roundtrip) early warning
+;; - this is also a very good place to test my audio and
+;;   video being on separate udp ports hypothesis
+
+
+;; ASYNCHRONOUS
+;; - search delay-event (post send ... too!?)
+;;   that do not acquire the task mutex
+;;   - or that sleep or do other blocking
+;;     behavior on the critical event thread
+
+
+;; SPHERE
+;; - investigate barbara's crash when I'm already
+;;   in kingdom
+
+
+;; facture Francois 100$/h
+
+
+;;;
+;;;; MEMORY
+;;;
+
+
+;; g_object_get_boolean volelem "mute" crashing in core
+
+
+;; make capturing the stack work again
+
+;; change #line name to use full filename or better the module name
+
+
+;; just shift click in the profiler to track in that task!!!
+
+;; test with world.scripts
+
+
+;; bad gen of #line 3680 "_num.scm\"" (regle dans le latest gambit)
+
+;; marc: pourrait on changer track-scheme pour #line ... module-name
+;; plutot que filename?
+
+
+;; my solution to manually add track around places that I want stack
+;; info for is very very primitive and kludgy. would marc have any idea
+;; how to do this better?
+
+
+;; TRACK
+;; - track allocations (fixed sized vector and stop when filled)
+;; - add __FILE__ __LINE__ tracking
+;; - AllocationsAll that keeps increasing always
+;; - mark_array(___PSP AllocationStacks, AllocationsCount);
+;; - ___update_allocation(___SCMOBJ obj, const char* file, int line)
+;;   that the %%tracking macro expand too in a ##c-code and updates
+;;   the last allocation with __FILE__ __LINE__ and my
+;;   %%make- functions expand to `(%%tracking (make-
+;; - track function that turns off tracking, updates the stack
+;;   of the newly created object and turns tracking back on
+;; - %%tracking expands into calling track and is used mainly for
+;;   the %%make- and %%allocate- function
+;; - this is why I started always building gambit with
+;;   --enable-track-scheme !!!
+;; - can control manually using track-allocations and untrack-allocations
+
+
+;; QUESTIONS
+;; - what need is pushing marc to do this?
+;; - what are the use cases behind replacing the object?
+;; - how do you do an api where the end user provides a c function
+;;   correctly in gambit??? (that is going to be so useful for me)
+
+
+;; SAMPLE
+;; - current 2550ish 2620max
+
+
+;;;
+;;;; SERVER SETUP
+;;;
+
+
+;; create a google account (gucartier@gmail.com)
+
+;; https://cloud.google.com
+
+;; Get started for free
+;; - used Barbara's phone for now
+
+;; create project
+;; name: Together
+;; id: togethersphere
+;; number: 582825761269 (generated by gcloud)
+;; no organisation
+
+;; create instance
+;; together-montreal
+;; N2 - 2 vCPU - 8GB memory
+;; Boot disk : Ubuntu 18.04 LTF - 30GB SSD
+
+;; try to not use: "Using OS Login"
+;; else we can
+;; gcloud compute --project "togethersphere" ssh --zone "australia-southeast1-b" "together@together-sydney"
+;; and the user gets created automatically
+
+;; go to IAM
+;; - add barbarasamson@gmail.com member with owner role
+;; - add Compute Admin role to barbarasamson@gmail.com
+;; - barbara needed to run gcloud auth login
+;;   to authorize glcloud from the terminal (maybe that's
+;;   all that was needed and adding Compute Admin role was
+;;   not needed)
+
+;; fresh server Ubuntu uses 1.7G
+
+;; git is already installed
+
+;; sudo apt update
+;; sudo apt install build-essential
+;; sudo apt install autoconf
+;; sudo apt install libsystemd-dev
+;; sudo apt install pkg-config
+;; sudo apt install libx11-dev
+;; sudo apt install libglu1-mesa-dev
+;; sudo apt install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+;; sudo apt install emacs
+;; sudo apt install unzip
+
+;; disk space now at 2.7G
+
+;; mkdir Devel
+;; cd Devel
+;; git clone https://github.com/gcartier/server-setup setup
+;; cd setup
+;; cp home/.emacs ~
+;; cp home/.gitconfig ~
+;; cp home/.profilerc ~
+;; add home/add-to-.bashrc to ~/.bashrc
+;; source ~/.bashrc
+
+;; cdd
+;; mkd gambit
+;; mkd app
+;; git clone https://github.com/jazzscheme/gambit devel
+;; cd devel
+;; ./configure '--enable-single-host' '--enable-systemd' '--enable-rtlib-debug-location' '--enable-rtlib-debug-environments'
+;; make -j2
+;; sudo make install (.4G)
+
+;; cdd
+;; mkd together
+;; mkd app
+;; git clone https://github.com/gcartier/together test
+;; cd test
+;; git clone https://github.com/gcartier/world
+;; git clone https://github.com/gcartier/jiri
+;; git clone https://github.com/jazzscheme/jazz (1G)
+;; cat > .jaz
+;; export JAZCONF=test
+;; <ctrl-d>
+;; jm kernel (optional step)
+;; jm jazz (optional step)
+;; jm -j 2
+
+;; cd ~/Devel/together
+;; mkd worlds
+;; git clone https://github.com/gcartier/together-world together (.3G)
+
+;; cd
+;; mkd .together
+;; git clone https://github.com/gcartier/together-assets.git assets (.2G)
+;; cd assets
+;; jas init
+;; jas add .
+
+;; cd ~/.together
+;; mkd test
+;; mkd 1.0.0
+;; mkd servers
+;; mkd Together
+;; .server
+#//
+(data jazz
+
+
+(version 1 4)
+(import world.server)
+
+
+(form
+  (<Server> host: "*" service: 50200)))
+//#
+
+;; git clone https://github.com/gcartier/together-start.git start
+
+;; cp -R ~/Devel/setup/server/test/identities .
+;; cp -R ~/Devel/setup/server/test/machines .
+
+;; in gcloud console main menu on the left choose VPC Network / Firewall
+;; - Create Firewall Rule (applies to all servers so only do once)
+;;   - Name : together
+;;   - Targets : All instances in the network
+;;   - Source IP ranges : 0.0.0.0/0
+;;   - Specified protocols and ports
+;;     - tcp : 50000-50050,50100-50150,50200-50250,50300-50350,50400-50450,50500-50550,51000-51050
+;;     - udp : 50000,50100,50200,50300,50400,50500,51000
+
+;; cd
+;; mkdir incoming
+;; chmod 777 incoming
+
+;; cd /etc/systemd/system
+
+;; together-test.service
+#//
+[Unit]
+Description=Together Test Service
+After=network.target together-test.socket
+Requires=together-test.socket
+
+[Service]
+Type=simple
+User=together
+Group=together
+ExecStart=/home/together/Devel/together/app/test/binaries/test/Together-Server
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
+//#
+
+;; together-test.socket
+#//
+[Unit]
+Description=Together Test Socket
+PartOf=together-test.service
+
+[Socket]
+ListenStream=50200
+BindIPv6Only=both
+FreeBind=true
+
+[Install]
+WantedBy=sockets.target
+//#
+
+;; keep alive
+;; sudo /sbin/sysctl -w net.ipv4.tcp_keepalive_time=60 net.ipv4.tcp_keepalive_intvl=60 net.ipv4.tcp_keepalive_probes=5
+;; add the following to /etc/sysctl.conf to make it persistent
+#//
+net.ipv4.tcp_keepalive_time=60
+net.ipv4.tcp_keepalive_intvl=60
+net.ipv4.tcp_keepalive_probes=5
+//#
+
+;; sudo systemctl start together-test
+
+;; sudo apt install apache2
+
+;; cd /var/www
+
+
+;;;
+;;;; SLOW VS FAST
+;;;
+
+
+;; WOW having not proper-tail-calls makes the
+;; code 100x slower in the minimal loop
+
+
+;; LOG
+;; - wtf is current-jiffy
+;; - does Gambit build nice with cl now?
+;; - Make (declare (not poll-on-return)) the default
+;; - Precompile syntax definitions for increased efficiency
+;; - #true #false
+
+
+;; USE_setitimer
+;; ___POLL
+;; USE_sigaction
+;; *not* USE_signal
+
+
+;; even the latest gambit has these weird shit
+;; slowdown effects. just differently. adding
+;; (define count 0) at top makes it go slow!!!
+
+
+;; removing ___POLL from slow.c makes it go fast
+
+
+;; of course adding (declare (not interrupts-enabled))
+;; fixes (patches!) the slowness
+;; -> *** FALSE *** even with (not interrupts-enabled)
+;;    the code can still run slow
+
+
+;;;
+;;;; PERSONAL
+;;;
+
+
+;; FRANCINE
+;; - plafond (2 endroits)
+;; - plinthe chauffante Joel
+;; - sonnette d'entrée
+;; - thermostats partout
+;; - bords de fenêtres
+;; - peinture craqué
+;; - chauffe eau
+
+
+;;;
+;;;; FRANCOIS
+;;;
+
+
+;; put back the not optimize-dead ...
+
+
+;; 'CFLAGS=-D___DONT_USE_BUILTIN_SETJMP'
+
+;; ./configure 'CC=/usr/local/bin/gcc-10' 'CFLAGS=-D___DONT_USE_BUILTIN_SETJMP' '--enable-single-host' '--enable-rtlib-debug-location' '--enable-rtlib-debug-environments' '--enable-track-scheme'
+
+
+;; OMG don't forget I also need to test on Windows and Linux
+
+
+;; MARC
+;; - dead local variables bug
+;; - slightly slower gc!?
+;; - smoother la momie!?
+;;   - could not doing (not )
+;; - faster load of gambit header
+;;   - probably explains the faster kernel build
+;; - can I compile-file cc: to cleanup my approach
+;;   - I get Undefined symbols "_main"
+
+
+;; IMPROVEMENTS
+;; - faster load of gambit header
+;;   - gsi  0m2.290s
+;;   - lgsi 0m0.339s
+;;   - lgsi 0m0.013s (no header)
+;; - faster build of kernel 1m20s vs 55s
+;;   - maybe it is just the header!?
+;;   - check with compiling functional
+;; - la momie seems smoother!?
+
+
+;; DEPROVEMENTS
+;; - gc seems slightly slower
+;;   - start a circle
+;;     - old .016s ish
+;;     - new .020s ish
+
+
+;; BUILTIN_SETJMP
+;; Marc Feeley @feeley 19:09
+;; je pense qu’on s’y prends incorrectement… de façon générale il se pourrait que les “builtin_setjmp” de clang et gcc soient incompatibles, donc ce qu’il faut faire c’est plutôt de forcer d’utiliser le setjmp normal… et c’est la raison d’être de ___DONT_USE_BUILTIN_SETJMP… donc il faudrait que tu build Gambit en définissant ce symbole et que tu compiles avec clang en utilisant ce symbole aussi
 ;; 
-;; $ ./main
-;; (audio_processing_impl.cc:272): Injected APM submodules:
-;; Echo control factory: 0
-;; Echo detector: 0
-;; Capture analyzer: 0
-;; Capture post processor: 0
-;; Render pre processor: 0
-;; (audio_processing_impl.cc:529): AudioProcessing::ApplyConfig: AudioProcessing::Config{
-;;   pipeline: {maximum_internal_processing_rate: 48000, multi_channel_render: 0, , multi_channel_capture: 0},
-;;   pre_amplifier: { enabled: 0, fixed_gain_factor: 1 },
-;;   high_pass_filter: { enabled: 1 },
-;;   echo_canceller: { enabled: 1, mobile_mode: 0, enforce_high_pass_filtering: 1 },
-;;   noise_suppression: { enabled: 0, level: Moderate },
-;;   transient_suppression: { enabled: 0 },
-;;   voice_detection: { enabled: 1 },
-;;   gain_controller1: { enabled: 1, mode: AdaptiveAnalog, target_level_dbfs: 3, compression_gain_db: 9, enable_limiter: 1, analog_level_minimum: 0, analog_level_maximum: 255 },
-;;   gain_controller2: { enabled: 1, fixed_digital: { gain_db: 0 }, adaptive_digital: { enabled: 0, level_estimator: Rms, use_saturation_protector: 1, extra_saturation_margin_db: 2 } },
-;;   residual_echo_detector: { enabled: 1 },
-;;   level_estimation: { enabled: 0 } }
-;; (agc_manager_direct.cc:69): [agc] GetMinMicLevel
-;; (agc_manager_direct.cc:73): [agc] Using default min mic level: 12
-;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
-;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
-;;  807, 11249, 10073, 15658, 12930, 3272, 3544, 10878, 9923, 5709, 12440, 14165, 4492, 3042, 7987, 2503, 2327, 3729, 2840, 6612,
-;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
-;; result = 0
-;;  807, 11249, 10073, 15658, 12930, 3272, 3544, 10878, 9923, 5709, 12440, 14165, 4492, 3042, 7987, 2503, 2327, 3729, 2840, 6612,
-;; (agc_manager_direct.cc:457): AgcManagerDirect::Initialize
-;; (agc_manager_direct.cc:294): [agc] Initial GetMicVolume()=0
-;; (agc_manager_direct.cc:299): [agc] Initial volume too low, raising to 12
-;;  19937, 19937, 25115, 25115, 4602, 4602, 14415, 14415, 1109, 1109, 6256, 6256, -5638, -5638, 5288, 5288, 20250, 20250, 4826, 4826,
-
-
-
-;; is_debug
-;; gn gen out/Release --args='use_rtti=true rtc_include_tests=false use_custom_libcxx=false'
-;; -> not sure the use_rtti=true is needed (need to try it without)
-
-
-;; clang++ -std=c++17 obj/libwebrtc.a   -I../.. -Igen -I../../third_party/abseil-cpp -I../../third_party/libyuv/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googlemock/include -I../../third_party/googletest/custom -I../../third_party/googletest/src/googletest/include -I../../third_party/abseil-cpp   -framework Cocoa -framework Foundation -framework IOKit         -framework Security -framework SystemConfiguration         -framework ApplicationServices -framework CoreServices         -framework CoreVideo -framework CoreAudio -framework AudioToolbox         -framework QTKit -framework AVFoundation -framework CoreMedia   main.cc -o main
-
-
-;; gn args out/Default/ --list --short
-
-
-;; clang++ -dynamiclib -undefined suppress -flat_namespace -Wl,-all_load libaec3.a libaudio_processing.a -o libwebrtcdsp.dylib
-
-;; clang++ -std=c++17 -L. -lwebrtcdsp -I../.. main.cc -o main
-
-
-;; WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR
-;; The transient suppressor functionality in the audio processing module is not always used.
-;; If you wish to exclude it from the build in order to preserve binary size, then define the
-;; preprocessor macro WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR. If you use GN, you can just set the
-;; GN argument rtc_exclude_transient_suppressor to true and GN will define the macro for you.
-
-
-;; if (rtc_enable_symbol_export || is_component_build) {
-;;    defines = [ "WEBRTC_ENABLE_SYMBOL_EXPORT" ]
-;; }
-
-
-;; clang++ -dynamiclib -undefined suppress -flat_namespace -Wl,-all_load libaec3.a -o xxx.dylib
-
-;; gcc -shared -o libget_zero_shared.so \
-;; -Wl,--whole-archive                  \
-;; libget_zero_static.a                 \
-;; -Wl,--no-whole-archive
-
-
-;; forgot opus has integrated fec!
-
-
-;; #1 **********************************************
-;; try aec3 linking with libwebrtc.a first
-;; *************************************************
-
-
-;; how does the webrtc (not dsp) plugin of gstreamer
-;; link against webrtc? -> oh ya right, there is no
-;; webrtc plugin, it's protocol-based plugins...
-
-
-;; try to build the webrtc-builds sample app against
-;; my already built google/webrtc !?
-
-
-;; local
-;; 3065069275 (world.audio:Audio-Sink:consume-audio world.audio:World-Audio:receive-server-audio world.audio:World-Audio:receive-audio world.streaming:client-audio-consumer jazz.stream:Stream-Sink:consume jazz.language.runtime.functional:register-site %%world.profiling:with-site world.profiling:with-site world.profiling:advise-site world.audio:File-Stream-Audio-Src:audio-loop world.task:with-task world.task:with-task world.task:with-task world.task:with-task jazz.debuggee:with-current-loop jazz.debuggee:with-current-loop world.task:with-task world.task:with-task world.task:with-task world.audio:Audio-Src:task-start world.task:Task:initialize ##thread-execute-and-end!)
-
-;; remote
-;; 170611735941 (world.audio:Audio-Sink:consume-audio world.audio:World-Audio:receive-server-audio world.audio:World-Audio:receive-audio world.client.udp:UDP-Receive-Channel:present-audio jazz.language.runtime.functional:register-site %%world.profiling:with-site world.profiling:with-site world.profiling:advise-site world.client.udp:UDP-Receive-Channel:process-audio-loop world.task:with-task world.task:with-task world.task:with-task world.task:with-task jazz.debuggee:with-current-loop jazz.debuggee:with-current-loop world.task:with-task world.task:with-task world.task:with-task world.client.udp:UDP-Receive-Channel:process-loop world.client.udp:UDP-Receive-Channel:initialize world.task:Task:initialize ##thread-execute-and-end!)
-
-
-;; BARBARA
-;; - timing!?
-;; - discontinuities!? (dropped packets)
-
-
-;; I will want both the echo canceller and the rndenoiser
-;; to be able to be turned on or off from together
-
-
-;; revisit the discont-wait: 0
-
-
-;; there is something nagging in the time-adapter in
-;; how we choose the initial timestamp-offset which
-;; could end up being really off if the first buffer
-;; timestamp we receive is really off which is often
-;; the case before things settle down. maybe I should
-;; have some progressive something to start!?
-
-
-;; there is still the mystery of is it an audio clock
-;; or not that gets allocated in together?
-
-
-;; there was some residual echo on the small laptop
-;; because the microphone input volume was set at max.
-;; reducing it to about 60% fixed it almost completely
-
-
-;; OMG this the clock ***changing*** from a system
-;; to an audio clock might be a bug fix of 1.18!?!!?!
-;; -> finish debugging and getting an audio clock
-
-
-;; really grok once and for all if adder is a potential
-;; candidate
-
-
-;; fix the crash that only happened when barbara started the group
-;; first and was due to her having sound notification on so that the
-;; ping sound was played and this trigger a bug of sound incorrectly
-;; calling consume-audio in that context
-
-
-;; osxaudiosink =
-;;   buffer-time 200000 (.2s) +
-;;   processing-deadline 20000000 (.02s)
-;;   = .22s
-;; audiotestsrc samplesperbuffer=480
-;;   = .01s (is also the delay)
-
-
-;; is it saying we don't need to audiomix!? (audio_processing.h)
-;; // Creates an APM instance. Use one instance for every primary audio stream
-;; // requiring processing. On the client-side, this would typically be one
-;; // instance for the near-end stream, and additional instances for each far-end
-;; // stream which requires processing. On the server-side, this would typically
-;; // be one instance for every incoming stream.
-
-
-;; WEBRTCDSP FLOW
-
-;; webrtcechoprobe
-;;   GstClockTime latency;
-;;   gint delay;
-;;   GstAdapter *adapter;
-;;   GstPlanarAudioAdapter *padapter;
-;;
-;;   info->rate = 48000
-;;   info->bpf = 4
-;;   self->period_samples = info->rate / 100 = 480
-;;   self->period_size = self->period_samples * info->bpf = 1920
+;; Guillaume Cartier @gcartier 19:10
+;; Es-ce que va risque d’avoir un impact sur la performance?
 ;; 
-;;   gst_webrtc_echo_probe_src_event
-;;     set latency
-;;     set delay
-;;   gst_webrtc_echo_probe_transform_ip
-;;     gst_buffer_copy
-;;     move the buffer timestamp to be in running time
-;;     gst_adapter_push
-;;     gst_adapter_flush
-;;   gst_webrtc_echo_probe_read
-;;     return delay
-
-;; webrtcdsp
-;;   GstAdapter *adapter;
-;;   GstPlanarAudioAdapter *padapter;
-;;   webrtc::AudioProcessing * apm;
-;;
-;;   gst_webrtc_dsp_analyze_reverse_stream
-;;     gst_webrtc_echo_probe_read
-;;     apm->set_stream_delay_ms (delay)
-;;     apm->ProcessReverseStream (data, config, config, data)
-;;     apm->AnalyzeReverseStream (&frame)
-;;   gst_webrtc_dsp_process_stream
-;;     apm->ProcessStream (&frame)
-;;   gst_webrtc_dsp_submit_input_buffer
-;;     gst_adapter_push
-;;   gst_webrtc_dsp_generate_output
-;;     gst_webrtc_dsp_take_buffer
-;;       gst_adapter_take_buffer
-;;     gst_webrtc_dsp_analyze_reverse_stream
-;;     gst_webrtc_dsp_process_stream
+;; Marc Feeley @feeley 19:10
+;; possiblement, mais c’est le prix à payer pour s’assurer que ce soit compatible
+;; 
+;; Guillaume Cartier @gcartier 19:11
+;; es-ce que c’est juste un prix sur les appels FFI ou sur aussi le code Gambit en general?
+;; 
+;; Marc Feeley @feeley 19:13
+;; c’est lors des transitions entre C et Scheme… mais le mieux c’est de tester… je doute que ce soit perceptible
 
 
-;; Jitsi
-;; PJSIP
-;; Google Hangout
-;; Google Meet
-;; Skype
-;; Skype Meet Now
-;; Facebook Messenger
+;; #include <setjmp.h>
+;; 
+;; #if __llvm__ || (defined(__GNUC__) && ___GNUC_VERSION > 500000)
+
+
+;; DEAD LOCAL VARIABLES
+;; deadlocvar.scm
+
+
+;; Marc: y-a t'il une facon clean dans le latest de
+;; compiler avec un gcc custom au lieu de toute la tarbarnac
+;; d'horreur que je fait?
+
+
+;; Es-ce que mes jazz:debug-table-advice etc sont encore
+;; necessaires dans le latest gambit?
+
+
+;; LATEST GAMBIT
+;; - search for bongo
+
+
+;; MARC
+;; *** WARNING -- "##parameterize" is not defined,
+;; ***            referenced in: ("~~lib/_gambitgsc.c")
+;; (link-incremental files output: link-file base: "~~lib/_gambitgsc")
+;; "-lgambitgsc"
+;; -> marc a repondu: oui c'est normal si tu fais
+;;    make bootstrap;make bootclean;make ca devrait disparaitre
+
+
+;; I could put the latest code in a latest branch that
+;; Francois can just checkout!?
+
+
+;; do an exact measurement but loading the gambit header might
+;; now be fast enough for me to remove all my shit around it
+
+
+;; HOURS
+;; - 03/31 16h 21h
+;; - 04/01 16h 19h
+;; - 04/02 08h 17h
+
+
+;;;
+;;;; TOGETHER
+;;;
+
+
+;; VISUALIZER
+;; - when no frame in a recorded event, could we place a -1
+;;   and shift everything else to the right!?
+
+
+;; REPLAY
+;; - register string in replay that would be sent with the replay so
+;;   I can record log category, message, ... (a bit similar to the
+;;   table that associates task names and ids that gets sent!?)
+
+
+;; SIP
+;; - reenable sip on all macs
+
+
+;; THEATER
+;; - mode where the stage manager clicks on someone
+;;   and that person because top and the other ones
+;;   form a half-circle looking at her
+
+
+;;;
+;;;; JAZZ
+;;;
+
+
+;; basic Jazz build on the website
+
+
+;; EVALUATE
+;; - could I do something to ctrl-enter in deployed code
+;;   not finding auto-audio? and the likes when I ctrl-enter
+;;   in setup-circle!?
+;;   - maybe not do jazz:outline-generate-filter-access as this
+;;     is ok for importing but not for a ctrl-enter inside a module
+;;     that needs access to private fields!? -> really think about this
+;;   - adding these to the otl makes ctrl-work
+;;     (definition (auto-audio?))
+;;     (definition (auto-video?))
+;;     (definition (auto-live?))
+
+
+;; why am I not saving locations as unit names in snapshots!?
+
+
+;;;
+;;;; VISUALIZER 2.0
+;;;
+
+
+;; not clear yet whether or not I can do this modifying
+;; the current code
+
+
+;; maybe the timeline, ... all use a Replayable
+;; that can be subclassed in Live-Replay and Replay!?
+;; - the live replay would give access to the chronology
+;;   history and the evolution and also understand the
+;;   streams and channels of the current circle!?
+
+
+;; should move everything to world!?
+
+
+;; circle     : Evolution-Timeline-Panel
+;; zone       : History-Timeline-Panel
+;; profile    : Network-Timeline-Panel
+;; visualizer : Together-Replay-Panel / Together-Timeline-Panel
+
+
+;; Together-Replay-Panel
+;;   Together-Visualizer-Panel
+;;     Stream-Visualizer
+;;       Sender-Visualizer
+;;       Server-Visualizer
+;;       Receiver-Visualizer
+;;   Together-Timeline-Panel
+;;   Together-Evolution-Panel
+
+
+;; - do it 100% in parallel with the old still existing
+;;   and accessible!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;; - so 0 pressure and so I can really start from the
+;;   ground up and do crazy stuff like having 100% plug
+;;   and play and move and have multiple instances of
+;;   the same widget, etc...
+
+
+;; - tier should not be in Timeline
+;; - from to now ... should not be in Replay
+
+
+;;;
+;;;; BUILDING
+;;;
+
+
+;; document how to build everything needed for together
+;; for all tier and for every platform
+
+
+;; SERVER
+;; - new gcloud server and document all the steps
+;; - transfer circling ottawa to together something
+;;   and the perfect time will be when together v0 is
+;;   working nicelly and we create a new gcould server
+;;   with the upgraded spec and document and test it
+;;   before moving the actual together server to it
+;; - enough memory to not need to stop prod, test, ...
+;;   to build
+;; - *** keep alive ***
+;;   - sudo /sbin/sysctl -w net.ipv4.tcp_keepalive_time=60 net.ipv4.tcp_keepalive_intvl=60 net.ipv4.tcp_keepalive_probes=5
+;;   - add the following to /etc/sysctl.conf to make it persistent
+;;     net.ipv4.tcp_keepalive_time=60
+;;     net.ipv4.tcp_keepalive_intvl=60
+;;     net.ipv4.tcp_keepalive_probes=5
+
+
+;; GAMBIT
+;; - git clone https://github.com/jazzscheme/gambit devel
+;; - cd devel
+;; - export MACOSX_DEPLOYMENT_TARGET=10.12
+;; - ./configure 'CC=/usr/local/bin/gcc-10' '--enable-single-host' '--enable-rtlib-debug-location' '--enable-rtlib-debug-environments' '--enable-track-scheme'
+;; - make -j8
+;; - sudo make install
+
+
+;; GSTREAMER
+;;   DISTRIBUTION (MAC)
+;;     meson -Dprefix=/Users/cartier/Devel/gstreamer/gst-build/distr -Dbuildtype=debugoptimized builddistr
+;;     ninja -C builddistr
+;;     meson install -C builddistr
+;;   DISTRIBUTION (WINDOWS)
+;;     on windows, meson --buildtype=debugoptimized and
+;;     --buildtype=release both generate correct /MD but
+;;     the default --buildtype=debug generates /MDs which
+;;     requires a non-standard debug library
+;;     *** MSVC ***
+;;     - start Visual Studio 2019 / x64 Native Tools Command Prompt
+;;     - cd c:\Home\gstreamer\gst-build
+;;     - ninja -C build
+
+
+;; WEBRTC DLL
+;; - launch Visual Studio 2019
+;; - open C:\Home\gstreamer\webrtc\webrtc.sln
+;; - make sure it is in Release configuration
+;; - Build Solution
+
+
+;; WEBRTC AUDIO PROCESSING
+;; - cd ~/gstreamer/webrtcaudioprocessing
+;; - ninja -C build
+
+
+;; BLIS
+;; - git clone https://github.com/flame/blis.git
+;; - cd blis
+;; - ./configure --enable-threading=pthreads --enable-cblas auto
+;; - make -j8
+;; - sudo make install
+
+
+;; TROUBLESHOOTING
+;; - when building: ninja -C build and getting the following error
+;;   Traceback (most recent call last):
+;;     File "/usr/local/Cellar/python@3.9/3.9.2_4/Frameworks/Python.framework/Versions/3.9/lib/python3.9/importlib/metadata.py", line 187, in from_name
+;;       raise PackageNotFoundError(name)
+;;   importlib.metadata.PackageNotFoundError: meson
+;;   => brew reinstall python fixed it
+;;   keywords: python meson ninja
+
+
+;;;
+;;;; VERSION 0.1
+;;;
+
+
+;; GEOMETRY
+;; - circle geometry person clicked at top
+;;   - try to preserve both bottom and top options
+
+
+;; INTERFACE
+;; - I joined an albatros audio-only circle and was not seeing
+;;   any texture for him
+;; - Marcel saw my name as only "uillaume" in a circle of 2 and
+;;   this also made him not see the no-audio bar correctly
+;; - should gray out of remove the invite button if you cannot
+;;   actually invite the person for whatever reason
+
+
+;; MENU
+;; - pressing central menu should not just hide the current
+;;   shown window
+;; - it is possible to open many windows from central menu and
+;;   then they get popped one by one and it could be that they
+;;   all get closed at the same time
+
+
+;; STREAM
+;; - maybe the generated files could go into a separate
+;;   folder so users have a clean experience
+
+
+;; LOGIN
+;; - it is possible to be in the login screen and the avatar is
+;;   not showing although clicking on Customize show it correctly
+;; - Marcel propose that when the name is known it could be shown
+;;   somewhere in the login screen in some fashion
+
+
+;; SLEEP
+;; - with barbara's mac closed, the server keeps changing
+;;   her status from offline to online back and forth
+
+
+;;;
+;;;; UDP
+;;;
+
+
+;; - this is the time to do the separate audio and video udp ports test
+;;   - produce a bad call with lots of video and then implement
+;;     (controlled by a flag to start!?) separate udp audio / video
+;;     and see if it makes a difference
+;;   - I think we should have udp (control!?)
+;;     udp-audio and udp-video ports. Brainstorm
+;;     with Barbara the asynchroneousness of that
+;;     approach
+;;     - simpler receive loops
+;;     - more robust to hacks!?
+;;     - more parallelism (at the moment audio
+;;       would have to wait for video inserted)
+;;     - tailor priority for audio vs video
+;;     - and of course hopefully less router
+;;       congestion for audio (and control!?)
+;; - could receiving rejects be *the* indicator
+;;   that network is ok but our receiving window
+;;   is too small (especially since at the moment
+;;   retain window is 1s) !?
+
+
+;;;
+;;;; BAILOUT
+;;;
+
+
+;; there is also the weird shit case of a bailout occuring
+;; during some processing that the bailout itself will do
+;; like during a change of zone
+;; - bailout of primordial by click leave circle crashes
+
+
+;; Zone start-tasks / stop-tasks
+;;   generate
+;;   free
+;;   instantiate
+;;   render
+;;   tick
+;;   player
+;;   redstone
+;;   gravity
+;;   lava
+;;   water
+;;   distance
+;;   eat
+;;   sun
+;;   spawn
+;;   missile
+;;   sound
+;;   music
+;;   processor
+;;   alive
+;;   client
+;; Zone start-simulation / halt-simulation
+;;   simulation
+;; Server Tier startup / shutdown
+;;   aliveness
+;; UDP Client connect / deconnect
+;;   receive
+;; UDP Client start / stop
+;;   state
+;; UDP Server start / stop
+;;   receive
+;; UDP Send Channel initialize / destroy
+;;   release
+;; UDP Server Channel initialize / destroy
+;;   release
+;; UDP Receive Channel initialize / destroy
+;;   process
+;; audio start-element / stop-element
+;;   audio
+;; video start-element / stop-element
+;;   video
+;; start-processing / stop-processing / change-effective-base-profile
+;;   consumer
+
+
+;; stop-task                                <zone> <aliveness> <state>
+;; halt-task                                <simulation>
+;; stop-generate                            <generate>
+;; stop-free                                <free>
+;; (close-port udp-port) / join-thread!     <receive>
+;; (terminate retain-ring) / join-thread!   <release>
+;; (terminate process-ring) / join-thread!  <process>
+;; (stop-listeners self) / (stop-task task) <audio/video>
+;; (stop-listener self) / (stop-task task)  <consumer>
+
+
+;;;
+;;;; VERSION 0.2
+;;;
+
+
+;; WEBRTC
+;; - do ap_setup ag1 ... into clean properties
+;;   - add transient suppression !?
+;; - want to support turning microphone
+;;   on off on off so maybe only the processor
+;;   should do create and delete!?
+;;   - would that bring back the little bit of
+;;     aretha sound before aec kicks in?
+
+
+;; DISCONNECT
+;; - what happens if X disconnects and the reconnects from
+;;   another machine
+
+
+;; TRANSPARENCY
+;; - when prod is on remove the GL_BLEND quick
+;;   hack in test so we can try and reproduce it
+;; - the bug can be fixed by resizing the window
+;;   -> investigate the render target when the bug
+;;      occurs
+;;   -> try and figure out the problem
+
+
+;;;
+;;;; DEBUGGER
+;;;
+
+
+;; DEBUGGEE NOT USING DEADLOCKED EVENT THREAD
+;; - need to really think this through
+;; - this might need a complete rethink of the
+;;   the whole debugger / debuggee system
+;;   - my intuition is that thread-int! should enable
+;;     a major simplification of the system
+;;   - one thing that is not uniform is the way the
+;;     primordial thread gets an initial repl even though
+;;     it is not in error (keep this in mind and maybe
+;;     I can unify this!?)
+;; - fix read / eval exception in the repl
+;; - search (thread- as in (thread-post in debugger and
+;;   debuggee packages!?
+
+
+;;;
+;;;; VERSION 1
+;;;
+
+
+;; bug in the audiobasesink gap code!? -> test-audioz
+
+
+;; because of together's .configurations I will
+;; need to do the thing of automatically determining
+;; the kernel compiler
+
+
+;; implement invalidate? on all platforms
+
+
+;; should test for #\. in the read of the listener
+;; and error if unexpected char!?
+
+
+;; MESSAGE
+;; - use strcasestr to check if error in warning
+;;   and grab stack!?
+;; - capture messages into snapshot!?
+;; - handle error messages to crash!?
+;; - look at all message type thinking about us
+;;   ignoring them at the moment
+;; - GST_ELEMENT_ERROR
+
+
+;; ECHO
+;; - my mic is mono and barbara is stereo!?
+;; - we capture the microphone in channel=1 !!!?!
+
+
+;; WEBRTCAP
+;; - when stopping
+;;   one element does ap_delete and the other still is
+;;   sending and so ends up recreating the dsp :)
+
+
+;; PRIVACY
+;; - when screen sharing, mic or camera on maybe we could as a
+;;   simple solution to making sure the user does not forget he
+;;   is sharing privacy media, bounce the application icon (flash
+;;   window on windows) for 5s every minute when in the backgroud!?
+
+
+;; SIMULATION
+;; - really need to think about the danger of a simulation making an actor
+;;   move or fall really far, even endlessly like the bug we had in void circles
+;;   - for example, does the simulation stop someone goes to the gathering, when
+;;     someone gets disconnected, ...
+
+
+;;;
+;;;; OPTIONAL
+;;;
+
+
+;; could I do the 1280x720 camera "hack" in a
+;; "better" way so that on Zathras I do not get
+;; penalized by having a framerate of 10
+
+
+;; not forget to scrap foreign from cairo
+;; fontconfig ...
+
+
+;;;
+;;;; LATENCY
+;;;
+
+
+;; CURRENT TOGETHER
+
+;; 38s (.5875)
+;; 30s (.3875)
+
+;; No audio nack -> 27s (.3125)
+
+;; T current -> 42s
+
+;; Zoom current -> 22s
+
+
+;; - real -> 14.5s (0)
+;; - zoom -> 25.5s (.275)
+;; - T classic -> 38s (.5875)
+;; - T aec -> 46s (.7875)
+;; - T aec + .01 audiomixer output-buffer-duration -> 43s (.7125)
+;; - T aec + .1 buffer-time osxaudiosink -> 38s (.5875)
+;; - T aec + .1 buffer-time osxaudiosrc -> 38s (.5875)
+;; - T aec + .1 udp-audio-buffer and .1 udp-audio-process-window -> 33s (.4625)
+
+
+;;;
+;;;; GSTREAMER
+;;;
 
 
 ;; GST-BUILD
@@ -234,6 +1352,8 @@
 ;;   the only way I have found is to move libwebrtc_audio_processing.* from
 ;;   /Library/Frameworks/GStreamer.framework/Versions/1.0/lib to another dir
 ;;   in order for the source build to use the pkg-config location instead
+;; - on windows I need to add gstreamer's bin to path so we have access
+;;   to glib-mkenums
 ;; - clone https://gitlab.freedesktop.org/gstreamer/gst-build.git
 ;;   - edit meson_options.txt
 ;;     - set the following dependencies to disabled
@@ -244,6 +1364,76 @@
 ;;       - tls
 ;;       - qt5
 ;;       - introspection
+;;   - meson build
+;;   - ./gst-worktree.py add ../gst-build 1.18.2
+;;   NOTE it seems there is a much simpler way than using gst-worktree
+;;        which is to git reset --hard 1.18.2 and then meson will take
+;;        care of putting all subrepositories at 1.18.2 also
+;;   - cd to ../gst-build
+;;   - edit meson_options.txt
+;;   - meson build
+;;   - ninja -C build
+;;
+;;   - refresh the following from jazz.stream.product
+;; cflags and libs obtained from the following calls inside the uninstalled shell
+;; $ pkg-config --cflags gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0
+;; $ pkg-config --libs gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0
+
+;; NOTES
+;;   - need the corresponding /Library/Frameworks/GStreamer.framework/Versions/1.0/lib/pkgconfig
+;;     in the PKG_CONFIG_PATH else a lot of libraries are going to be build from sources and many
+;;     will just not succeed. An indicator of something gone wrong is ninja trying to compile 4K
+;;     files instead of around 2K files
+
+
+;; RUN FROM SOURCE
+;; - Windows
+;;   - PATH=$SOURCE_PATH
+;;   - move all libgst*.dll into a separate folder
+
+
+;; NEW VERSION CHECK HISTORY OF THESE
+;; - gstsystemclock
+;; - gstaudiomixer
+;; - gstaudioaggregator
+;; - gstaggregator
+;; - gstosxaudiosink
+;; - gstaudiosink
+;; - gstbasesink
+
+
+;;;
+;;;; WEBRTC
+;;;
+
+
+;; I can also remove the hack in audio probe
+;; around setting latency and delay now that
+;; the probe is created explicitly (i think)
+
+
+;; also remove gst_webrtc_audio_processor_set_probe
+;; - now that echo cancellation is working, general
+;;   cleanup of webrtcaudioprocessing
+
+
+;; there is also probably a lot of optimization
+;; to do in webrtcaudioprocessing like doing less
+;; copying, ...
+
+
+;; MAC
+;; - gn gen out/Release --args='is_debug=false rtc_build_tools=false rtc_include_tests=false rtc_build_examples=false use_custom_libcxx=false'
+
+
+;; WINDOWS
+;; - gn gen --ide=vs2019 out/MSVC --args="is_debug=false rtc_build_tools=false rtc_include_tests=false rtc_build_examples=false use_lld=false is_clang=false"
+;; - follow https://docs.microsoft.com/en-us/winrtc/getting-started
+;;   - only needed c:\webrtc\src and c:\webrtc\src\third_party\abseil-cpp
+;;   - in my exploration I ended removing every extra Preprocessor Definitions
+;;     and it seems to be working fine
+;;   - needed to also add libcpmt to Ignore Specific Default Libraries
+;;   - needed to set C/C++ Code Generation Runtime Library to /MT
 
 
 ;;;
@@ -259,6 +1449,47 @@
 ;; - do the big renaming of zone -> world etc!?
 
 
+;; investigate change-effective-base-profile being
+;; called much too often and even a couple times just
+;; in the boot process
+
+
+;;;
+;;;; YOUTUBE
+;;;
+
+
+;; streaming pipeline from question in mailing list
+;; gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1600,
+;; height=1200, framerate=30/1, format=MJPG ! jpegdec ! queue ! omxh264enc !
+;; 'video/x-h264, streamformat=(string)byte-stream' ! h264parse ! flvmux
+;; streamable=true name=mux ! rtmpsink
+;; location="rtmp://a.rtmp.youtube.com/live2/xxxxx" audiotestsrc ! voaacenc
+;; bitrate=128000 ! mux.
+
+
+;;;
+;;;; WARCRAFT
+;;;
+
+
+;; -- comment
+
+;; /fstack: Shows a Z-ordered (I think) list of all the UI frames under the cursor
+;; /etrace: Shows a running commentary of game events (and the parameters passed to them) as they happen
+;; /dump: Just dumps a variable's value to chat. This works better than print for tables.
+;; /script: Anything following this will executed immediately as Lua code.
+
+;; debugstack()
+;; print("HELLO")
+;; message('Arcania ready!')
+;; RaidNotice_AddMessage(RaidBossEmoteFrame, "GOGOGO!!!", ChatTypeInfo["RAID_WARNING"])
+
+;; f:Hide()
+
+;; bartender4 -> [@target,exists]show;[combat]show;hide
+
+
 ;;;
 ;;;; PERSONAL
 ;;;
@@ -267,43 +1498,6 @@
 ;; web backup of everything
 
 ;; git lfs for my backup!!?!
-
-
-;; - robinet
-;; - alarmes de feu
-;; - appeler pour un contenant a composte
-;; - cancel cell phone
-;; - code pour declaration annuelle pour le condo
-
-
-;; MASTERCARD
-;; - blizzard
-;; - netflix
-;; - amazon prime
-;; - auth rev
-;; - github
-
-
-;; same password for 1password as for WoW
-
-
-;; moon rise kingdom sur prime (joel)
-
-
-;;;
-;;;; TOGETHER
-;;;
-
-
-;; <key>CFBundleIdentifier</key>
-;; <string>com.googlecode.iterm2</string>
-
-
-;; github sponsors seems really interesting
-;; - https://github.com/ExistentialAudio
-;; - vs Patreon!?
-;; - Sponsors
-;;   - zero fees to use the program
 
 
 ;;;
@@ -342,9 +1536,30 @@
 ;;   gst-pipeline and gst-bin
 
 
+;; x264 noise reduction
+;; GstForceKeyUnit
+;; gst_video_encoder_reset !?
+
+
+;;;
+;;;; GAIA
+;;;
+
+
+;; - do the c-constituent hack correctly so we can for
+;;   example double-click on !foo and still get correct
+;;   outer-expr
+
+
 ;;;
 ;;;; GAMBIT
 ;;;
+
+
+;; UDP
+;; - will have to do something to take out the 2 commits about
+;;   getting and setting udp buffer sizes before rebasing the
+;;   lastest Gambit that includes my change
 
 
 ;; MONOTONIC
@@ -367,6 +1582,9 @@
 ;; ##gambcomp -> ##gambuild
 ;; ##parameterize -> ##parameterize1
 ;; ##remove -> ##remq
+;; ##load-required-module -> ##load-module
+;; pour ##register-module-descrs-and-load! ca depend comment tu l'utilises mais
+;; ca pourrait etre un ##register-module-descrs combine a un ##load-module
 
 
 ;; LATEST GAMBIT
@@ -382,7 +1600,7 @@
 ;; ***            referenced in: ("build/develop/build/kernel/runtime/unit.c")
 ;; - so gensym cannot be used in a global
 ;;   define? (anything else?)
-;; - redo the Do now show console commit
+;; - redo the Do not show console commit
 ;; - redo monotonic with Marc
 ;; - check all good with perf counters commit gone
 ;; - monotonic is a big one (have my mac side by side)
@@ -406,29 +1624,52 @@
 
 
 ;;;
+;;;; GITHUB
+;;;
+
+
+;; TOKENS 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
+;; - gucartier@gmail.com
+;;   - Guillaume Cartier
+;;     - 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
+;; - yownubeta@gmail.com
+;;   - Together installer
+;;     - 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
+
+
+;;;
 ;;;; KEYS
 ;;;
 
 
-;; 2987E710-097A-4748-A7B4-8221B2FF2CE8 - Guillaume - developer admin - devel test
-;; 71955DD9-B571-4046-B37D-5C9EE1182501 - Barbara   - developer admin - devel test
-;; D7FEC162-B856-4064-8A04-6FBE5FF9480B - Marcel    - developer       -       test
-;; A654A4EF-B5E9-4538-B13A-FE0A39150A9C - Francois  - developer       -       test
-;; 7B9D4264-2286-4530-8721-B32CDF4E9BF3 - Alexandra - <default>       -       test
-;; 344EC2CE-4ADF-4024-A514-AD6FD806AAC3 - Marc      - developer       -       test
-;; 80535CB9-5EBB-4C80-A67D-8120614EA548 - Frederic  - developer       - devel
-;; 87D51A8B-7157-41F4-95FC-1C2F06E4BD9B - Johann    - <default>       -       test
-;; B63F2AD3-228F-4242-AFB1-F99E842385C5 - Zathras   - developer       - devel test
-;; 638CFA7F-E5BD-4772-989E-12EAAA536AD8 - Jerome    - developer       - devel test
-;; 8FE3128A-710E-4255-8F0D-A4497B8E5A09 - Garibaldi - developer       -       test
-;; CBDAFBD9-2FF8-4A39-87A9-81FBC5F0CF02 - Ivanova   - developer admin - devel
-;; 99CA79BD-B6A3-4EFA-BAEF-166271C6C6D3 - Joel      - <default>       -       test
-;; 564BBE98-FB3D-4A5F-8D41-BD896A6D7056 - Kira      - <default>       - devel
-;; 335DFFBA-49E5-4D7E-A510-DDB1A135A9A9 - Klia      - <default>       - devel
-;; A06250E4-B0D2-4119-90AB-E4B84D2FFCF3 - Pixel     - <default>       - devel test
-;; D612E2C4-9DFC-4C8E-9DD9-90F27ED76067 - Dot       - developer       - <local mobile>
-;; 515734C8-1BEA-4922-853E-374E4FA51380 - Bip       - developer       - <local mobile>
-;; 800981B7-DACC-41A8-ACAE-94A1CED5C7AE - Bop       -                 - <local mobile>
+;; EEE94348-9079-4C57-9EC5-357477D2CED7 - Albatros   -                 -       test
+;; 7B9D4264-2286-4530-8721-B32CDF4E9BF3 - Alexandra  -                 -       test
+;; 73B44BF1-D19B-4BED-BDEB-0D2B0D130D7F - Andres     -                 -       test
+;; 71955DD9-B571-4046-B37D-5C9EE1182501 - Barbara    - developer admin - devel test
+;; 543949DA-C2B7-41E3-8472-F1ADFF98AA8E - Christine  -                 -       test
+;; A654A4EF-B5E9-4538-B13A-FE0A39150A9C - Francois   - developer       -       test
+;; 80535CB9-5EBB-4C80-A67D-8120614EA548 - Frederic   - developer       - devel
+;; 8FE3128A-710E-4255-8F0D-A4497B8E5A09 - Garibaldi  - developer       -       test
+;; 2987E710-097A-4748-A7B4-8221B2FF2CE8 - Guillaume  - developer admin - devel test
+;; CBDAFBD9-2FF8-4A39-87A9-81FBC5F0CF02 - Ivanova    - developer admin - devel
+;; 638CFA7F-E5BD-4772-989E-12EAAA536AD8 - Jerome     - developer       - devel test
+;; 99CA79BD-B6A3-4EFA-BAEF-166271C6C6D3 - Joel       -                 -       test
+;; 87D51A8B-7157-41F4-95FC-1C2F06E4BD9B - Johann     -                 -       test
+;; 46370EA0-D50B-4A02-A6B6-C19F31EAC5B4 - Magnus     -                 -       test
+;; 344EC2CE-4ADF-4024-A514-AD6FD806AAC3 - Marc       - developer       -       test
+;; D7FEC162-B856-4064-8A04-6FBE5FF9480B - Marcel     - developer       -       test
+;; 838E6AC6-20D8-411D-AE75-56FDE87FD197 - Nathalie   -                 -       test
+;; 335DFFBA-49E5-4D7E-A510-DDB1A135A9A9 - Persephone -                 -       test
+;; 32EB02A8-A11F-4367-A796-6628260A2A3C - Shirley    -                 -       test
+;; 86CE60EF-6CF7-4435-A43A-2B16B25B6510 - Tristan    - developer       -       test
+;; B63F2AD3-228F-4242-AFB1-F99E842385C5 - Zathras    - developer       - devel test
+
+;; 564BBE98-FB3D-4A5F-8D41-BD896A6D7056 - Kira       -                 - devel
+;; 335DFFBA-49E5-4D7E-A510-DDB1A135A9A9 - Klia       -                 - devel
+;; A06250E4-B0D2-4119-90AB-E4B84D2FFCF3 - Pixel      -                 - devel test
+;; D612E2C4-9DFC-4C8E-9DD9-90F27ED76067 - Dot        - developer       - <local mobile>
+;; 515734C8-1BEA-4922-853E-374E4FA51380 - Bip        - developer       - <local mobile>
+;; 800981B7-DACC-41A8-ACAE-94A1CED5C7AE - Bop        -                 - <local mobile>
 
 
 ;;;
@@ -467,15 +1708,6 @@
 ;;;
 ;;;; CRITICAL
 ;;;
-
-
-;; GRAPHIC
-;; - ensure no render when minimized and validate that
-;;   cpu and gpu go down to minimal levels even on mac
-
-
-;; MENU
-;; - have I lost esc -> close central menu?
 
 
 ;; SIMULATION
@@ -621,6 +1853,8 @@
 ;; - Cairo
 ;; - Freetype
 ;; - FontConfig
+;; - Pixman
+;; - Png
 ;; - LibGIT2
 ;; - OpenGL
 ;;   - GLEW
@@ -745,29 +1979,25 @@
 ;; - /w <to> doesn't report if <to> does not exists
 
 
-;; JAZZ
-;; - why am I not saving locations as unit names in snapshots!?
-
-
 ;; LEAKS
-;; - gambit --enable-debug-log --enable-debug-alloc-mem
-;; - jazz (define track-leaks? #t) in .jazzini
-;; - mac MallocStackLoggingNoCompact=1 t gaia gl nolive
-;; - mac leaks -e g_quark_init -e gldCreateBuffer --fullStacks Together | more
-;; - opengl (gl-texture-count) (glVertexArrayCount) (glBufferCount)
-;; - gstreamer GST_TRACERS="leaks" GST_DEBUG="GST_TRACER:7"
-;; - gstreamer (gst_deinit)
+;; - gambit : --enable-debug-log --enable-debug-alloc-mem
+;; - jazz : (define track-leaks? #t) in .jazzini
+;; - mac : MallocStackLoggingNoCompact=1 t gaia gl nolive
+;; - mac : leaks -e g_quark_init -e gldCreateBuffer --fullStacks Together | more
+;; - opengl : (gl-texture-count) (glVertexArrayCount) (glBufferCount)
+;; - gstreamer : need to run from source
+;; - gstreamer : GST_TRACERS="leaks" GST_DEBUG="GST_TRACER:7" GST_DEBUG_NO_COLOR=1 >& leaks
+;; - gstreamer : GST_TRACERS="leaks(stack-traces-flags=full)" GST_DEBUG="GST_TRACER:7" GST_DEBUG_NO_COLOR=1 >& leaks
+;; - gstreamer : GST_TRACERS="leaks(stack-traces-flags=full,check-refs=true)" GST_DEBUG="GST_TRACER:7" GST_DEBUG_NO_COLOR=1 >& leaks
+;; - gstreamer : (gst_deinit) note that it will hang unless all pipelines are released
 
 
-;; GSTREAMER EXPERT
-;; - echo cancellation
-;; - bug with audio clock
-;; - build on windows
-;; - have the simple bug9 with sin-latency
-;; - high quality video
-;; - opus on windows
-;; - wasapi thread com bug
-;; - nicolas dufresne
+;;;
+;;;; PYTHON
+;;;
+
+;; /usr/local/lib/python3.9/site-packages/
+;; PYTHONPATH=. python3 mlfromscratch/examples/multilayer_perceptron.py
 
 
 ;;;
@@ -775,12 +2005,16 @@
 ;;;
 
 
+;; nc -l 1299
+;; nc localhost 1299
 ;; (setenv "HOME" "c:/Home") to test pristine conditions
+;; redirect both stdout and stderr to a file >&
+;; git log -- filename1 filename2 ...
 ;; git branch --contains <commit>
 ;; git show --pretty="" --name-status <commit>
 ;; git log --pretty=format:"%s" --since=1.weeks > world.log
-;; git log --pretty=format:"%ai; %s" > world.log
-;; git log --pretty=format:"%H; %ai; %an; %s" > world.log
+;; git log --pretty=format:"%h; %ai; %s" > world.log
+;; git log --pretty=format:"%h; %ai; %an; %s" > world.log
 ;; 7z.exe a -t7z "Dawn of Space.7z" "C:\\Program Files (x86)\\Dawn of Space" -xr\!.git
 ;; make deselect-gen-for-commit
 ;; git clean -xfd
@@ -788,6 +2022,11 @@
 ;; lddtree (linux)
 ;; (c-code "___ACTLOG_BEGIN_PS(TOTO,_);")
 ;; (c-code "___ACTLOG_END_PS();")
+;; system_profiler SPApplicationsDataType
+;; lldb <executable> -- <arguments>
+;; - r
+;; - bt
+;; DYLD_PRINT_LIBRARIES=1
 
 
 (module profile.together.Together jazz
@@ -798,6 +2037,7 @@
         (jazz.application.services)
         (jazz.catalog)
         (jazz.clipboard)
+        (jazz.console)
         (jazz.editor.lisp)
         (jazz.ide)
         (jazz.ide.development)
@@ -821,17 +2061,83 @@
 ;;;
 
 
+(define-color DM-Dark-Gray        red:   30 green:   30 blue:   30 alpha: 250)
+(define-color DM-DarkMedium-Gray  red:   45 green:   45 blue:   45 alpha: 245)
+(define-color DM-DarkLight-Gray   red:   50 green:   50 blue:   50 alpha: 240)
+(define-color DM-DarkBlue         red:   18 green:   36 blue:   49 alpha: 240)
+(define-color DM-Text-Primary     red:  230 green:  230 blue:  230 alpha: 255)
+(define-color DM-Text-Secondary   red:  200 green:  200 blue:  200 alpha: 245)
+(define-color DM-Highlight-1      red:  179 green:  136 blue:  245 alpha: 250)
+(define-color DM-Highlight-2      red:  99 green:   215 blue:  197 alpha: 250)
+(define-color DM-Highlight-3      red: 210 green:   215 blue:  134 alpha: 155)
+(define-color DM-Highlight-4      red: 233 green:   189 blue:  134 alpha: 155)
+(define-color DM-Code-Comments    red: 168 green:   168 blue:  168 alpha: 240)
+(define-color DM-Code-Keyword     red: 210 green:   215 blue:  134 alpha: 240)
+(define-color DM-Code-Defined     red: 198 green:   255 blue:  193 alpha: 250)
+(define-color DM-Code-Data        red: 198 green:   122 blue:  206 alpha: 250)
+
+
 (class Together extends Gaia-Profile
   
   
-  (method override (user-code self text)
-    (let ((start (get-start text)))
-      (let ((expr (expr-at text start)))
-        (when (symbol? expr)
-          (when (= 0 (length (get-references (get-cataloguer) (->string expr))))
-            (let ((line (get-line start)))
-              (let ((range (new-range text (new Cell line 0) (new Cell line 0))))
-                (insert-string (get-model text) range "@too-big "))))))))
+  (method override (test self)
+    @w
+    (let ((dir {Directory Home "Devel" "gambit" "app" "latest"}))
+      (let ((full (new-file dir "full.log"))
+            (partial (new-file dir "gambit.log")))
+        (define (find-key line separator)
+          (let ((pos (search line separator)))
+            (assert pos
+              (substring line 0 pos))))
+        
+        (let ((table (make-table test: equal?)))
+          (for-each (lambda (line)
+                      (let ((key (find-key line "; ")))
+                        (table-set! table key line)))
+                    (load-lines full char-encoding: 'UTF-fallback-ISO-8859-1))
+          (let ((converted (new-file dir "converted.log"))
+                (count 0))
+            (call-with-output-file (path-settings converted)
+              (lambda (port)
+                (let ((partial-lines (load-lines partial char-encoding: 'UTF-fallback-ISO-8859-1)))
+                  (for-each (lambda (line)
+                              (let ((key (find-key line " ")))
+                                (let ((fullline (table-ref table key)))
+                                  (format port "{a}{%}" fullline)))
+                              (increase! count))
+                            (remove-trailing "" partial-lines test: equal?)))))
+            (debug 'converted count))))))
+  
+  
+  (method override (test1 self)
+    (let ((file {File Settings ".history"})
+          (text (get-console-text)))
+      (let ((history (console-collect-history text)))
+        (call-with-output-file (path-settings file)
+          (lambda (output)
+            (for-each (lambda (entry)
+                        (write entry output)
+                        (newline output))
+                      history)))))
+    (user-message "History written"))
+  
+  
+  (method override (test2 self)
+    (let ((file {File Settings ".history"})
+          (text (get-console-text)))
+      (let ((history (call-with-input-file (path-settings file)
+                       read-all)))
+        (let ((first? #t))
+          (for-each (lambda (entry)
+                      (if first?
+                          (set! first? #f)
+                        (insert-newline text)
+                        (insert-styled text "> " 'Prompt))
+                      (insert-styled text entry 'Input))
+                    history))
+        (insert-newline text)
+        (insert-newline text)
+        (insert-styled text "> " 'Prompt))))
   
   
   @w
@@ -880,16 +2186,6 @@
           directories?: #t
           recursive?: #f)))
     (debug 'DONE))
-  
-  
-  (method override (test1 self)
-    (set-selection % (list (new Cell 0 0)))
-    (debug (get-selection %)))
-  
-  
-  (method override (test2 self)
-    (set-selection % (list (new Cell 0 1)))
-    (debug (get-selection %)))
   
   
   (method (clean-ds_store self (dry-run?: dry-run? #f))
