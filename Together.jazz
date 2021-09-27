@@ -1939,6 +1939,75 @@ net.ipv4.tcp_keepalive_probes=5
 
 
 ;;;
+;;;; WINDOWS
+;;;
+
+
+;; RNNOISE
+;; - from a vsvars shell
+;; - git clone https://github.com/almogh52/rnnoise-cmake.git
+;; - cd rnnoise-cmake
+;; - mkdir build
+;; - cd build
+;; - cmake -DRNNOISE_COMPILE_OPUS=1 ..
+;; - cmake --build . --config Release
+
+
+;; NSIS
+;; - can we override the size needed info
+;; - confirmation dialog on replace
+;; - block user from changing destination
+
+
+;; CODE SIGNING
+;;
+;; First step is clearly to be able to reproduce
+;; #1 first installation scary dialog
+;; #2 antivirus chocking first launch to death
+;;
+;; - the windowns unzipper preserves the flag that says the file was
+;;   downloaded from internet and applies it to every file recursively
+;; - 7-zip does not
+;;
+;; - SignTool (SignCode is deprecated)
+;; - PowerShell New-SelfSignedCertificate (MakeCert is deprecated)
+;;
+;; Using PowerShell (Admin)
+;; PS C:\Home> New-SelfSignedCertificate -Subject "Together Code Signing Certificate" -Type CodeSigningCert -FriendlyName Together -CertStoreLocation cert:\LocalMachine\My
+;; 
+;; 
+;;    PSParentPath: Microsoft.PowerShell.Security\Certificate::LocalMachine\My
+;; 
+;; Thumbprint                                Subject
+;; ----------                                -------
+;; E94FFDEA425037EF16DE164825FF7151223B0464  CN=Together Code Signing Certificate
+;;
+;; certlm.msc -> certicates app
+;;
+;; $cert=Get-ChildItem -Path Cert:\LocalMachine\My -CodeSigningCert
+;;
+;; Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
+;;
+;; $cert=Get-ChildItem -Path Cert:\LocalMachine\Root -CodeSigningCert
+;; Set-AuthenticodeSignature -FilePath "C:\Home\together\setup\Together Setup.exe" -Certificate $cert -HashAlgorithm SHA256
+
+
+;; NAHIMIC
+;; - service that bugs windows by generating a crash
+;;   every 5 seconds and polute the clipboard in the process
+
+
+;; WINDOWS DPI
+;; - I could search the source code of NSIS for
+;;   ManifestDPIAware and see what they do!?
+
+
+;; TODO
+;; - understand why if i click and hold on the title bar of
+;;   the windows, the input thread stops being called it seems
+
+
+;;;
 ;;;; OTHERS
 ;;;
 
