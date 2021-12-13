@@ -6,41 +6,399 @@
 ;;;
 
 
-;; build the dlls on windows for the gap fix
+;; finish doing jas upload & download
+;; as in-place terminal
 
 
-;; clean compilation warnings
-
-
-;; headphones plug/unplug on windows
+;; i think jiri should pass a feedback
+;; that places the info in an object
+;; vector that the other side is blocked
+;; on and the jas download is ran in a
+;; new thread
 
 
 ;;;
-;;;; WORLD
+;;;; SERVICES
 ;;;
 
 
-;; LOST
-;; - perlin
-;; - planets
-;; - procedural
-;; - heightmap
-;; - fbx
-;; - obj
-;; - triangulate
+;; 50000 - 50599 : together
+;; 51000         : jas
+;; 55000         : jedi
+;; 56000         : gaia
 
 
-;; *******************************************************
-;; really the only goal of gaea or any similar effort is
-;; to clean the code base of together and make it simple
-;; and clean. the idea is that the world framework doesn't
-;; do everything but what it does is clear and clean. and
-;; then it starts making sense making it available in gaea
-;; *******************************************************
+;;;
+;;;; JAS
+;;;
 
 
-;; remove everything obsolete
-;; gaea
+;; the download {a} files should use the diff to
+;; report the correct number of files being downloaded
+;; (same for upload for sure)
+
+
+;; jas might be a super nice and simple place
+;; to test dependency breaking in need in together
+;; by making the debuggee code optional and load
+;; on demand or something
+
+
+;; remove dependency to libgit2
+
+
+;; what i will need to do so an upload doesn't block
+;; downloads until everything has been received on the
+;; server (receiving to a temp dir for example) could
+;; also be used to make download interrupt (control-c)
+;; friendly!
+
+
+;; checkout-commit (cadr rest) doesn't look
+;; correct. test it that it should be
+;; (caddr rest) to get the digest
+
+
+;; clone prod with 25 commits -> 52s
+;; clone prod with 1 commit -> 19s
+
+
+;; the zlib-deflate of the entries sent by the
+;; server should probably be cached in a file
+
+
+;; ASSOCIATIVE
+;; - using jas server would end up speeding
+;;   up asset transfer tremendeously as atm
+;;   because it is based on the presence
+;;   system it ends up being read / write
+;;   (is this true?)
+
+
+;; 130 -> 8
+;; 320 -> 20
+
+
+;; total size 30672454
+
+;; write -> 80s
+;; subu8vector -> 60s
+;; only read-subu8vector -> 40s
+;; to store-object -> 40s
+;; to retrieve-file -> 43s
+
+;; returning almost nothing -> 36s
+;; send path as '() -> 35s
+
+;; request all -> 8s
+
+
+;; SIRIUS
+;; 336 used of 648 *.o1
+
+;; TOGETHER
+;; 810 used of 1415 *.o1 at the gathering
+;; 812 with 3d world and audio / video circle
+;; 0 used of 1415 *.otl of course
+
+
+;; David would have joined by clicking
+;; my name in the circle
+
+
+;; my only open-welcome for developer
+;; lost it for a 3d zone
+
+
+;; easiest way to ensure someone like
+;; linin starts in low!?
+
+
+;; screen share on linux is not v4l2src
+;; but ximagesrc
+
+
+;; if developer? 2048 1024
+
+
+;; Barbara Samson's view
+
+;; search all 'screen
+
+
+;; do something about resize
+;; - probably stop and restart view share
+;;   at beging and end of resize!?
+
+
+;; can we improve screen share quality
+;; to be as good as view share!?
+
+;; the answer is YESSSSSSSSSSSSSSSSSSSS
+
+;; do the (tie "video/x-raw, format=BGRA")
+;; multiplatform
+
+;; I am sitting next to a very very smart
+;; gf wearing really really nice panties
+;; life is good and text is crisp
+
+
+;; try to stream warcraft at 30fps in together
+
+
+;;;
+;;;; CONTROL
+;;;
+
+
+;; has requested
+;; allow
+;; deny
+
+
+;; review messages with B
+
+;; "control"
+
+;; "requested" feels hard
+
+;; accept -> allow!?
+
+
+;; auto start view share in server-request-control
+
+
+;; fuck the join roaming was useful of course
+
+
+;;;
+;;;; CAPTURE
+;;;
+
+
+;; roaming should not receive / ... the streams (or should
+;; it) !?
+
+
+;; can surely do the flip using a shader like the camera!?
+
+
+;; find the right naming for view and then capture
+;; screen becomes capture view and so i could order
+;; share screen, share view, capture view
+
+
+;; wow sharing screen and roaming are really closely
+;; related. maybe the clean way is to invite shirley
+;; to my circle and we she accepts she is still in
+;; the gathering so auto roaming and i receive her
+;; camera but she is in the circle, nothing is hidden
+;; everyone see's she's in my circle which is perfect
+
+
+;; why not allow the camera if wanted when roaming!?
+
+
+;; don't see the increase in throttle upload
+;; should we record the modifier instead
+
+;; atm the inc seems to be recorded as 0
+
+;; fix profile network regression
+
+;; could i make profile network use the video
+;; profile bitrates so it is useful info!?
+;; -> maybe this even overrides the default
+;;    profile!?
+
+;; take control using gaia for full debugging
+;; of a network behavior
+
+;; rename noack-received to ack-is-late or
+;; something
+
+
+;; show throtling in info shirley
+;; - everything to debug a bad network
+;;   on a computer that is standard
+;; - shirley speed test
+;;   - download 20.6 upload 0.7
+;; - shirley's replay is soooo interesting
+
+
+;;;
+;;;; WARCRAFT
+;;;
+
+
+;; idols can be swaped in combat!!!
+;; - adjust my macros as a key part of druid tanking
+;;   is high dps
+
+
+;; need to be able to turn
+;; walking backward facing backward
+;; -> for backward straffing is much better
+
+
+;; keep nameplates on screen
+;; (at least target!?)
+
+
+;; -- comment
+
+;; /fstack: Shows a Z-ordered (I think) list of all the UI frames under the cursor
+;; /etrace: Shows a running commentary of game events (and the parameters passed to them) as they happen
+;; /dump: Just dumps a variable's value to chat. This works better than print for tables.
+;; /script: Anything following this will executed immediately as Lua code.
+
+;; debugstack()
+;; print("HELLO")
+;; message('Arcania ready!')
+;; RaidNotice_AddMessage(RaidBossEmoteFrame, "GOGOGO!!!", ChatTypeInfo["RAID_WARNING"])
+
+;; f:Hide()
+
+;; bartender4 -> [@target,exists]show;[combat]show;hide
+
+
+;; annoying numbers / text
+;; level
+;; ms not working
+;; order???
+;; look at curse
+;; again... integrate with luna!?
+;; who has aggro
+;; make sure magic is last
+;; what is the damn 0
+;; no lb vert bar
+;; better color for lb than blue
+;; border around to distinguish!?
+
+
+;; could i change mangle / rip / combo / energy into
+;; weakauras ( ) !?
+
+
+;; THIS BREAKS QUESTIE!!!
+;;
+;; patch in AceEvent-3.0.lua
+;; 
+;; function AceEvent.events:OnUsed(target, eventname)
+;;    -- patch bug
+;;    if not eventname == "PARTY_MEMBERS_CHANGED" then
+;; 		AceEvent.frame:RegisterEvent(eventname)
+;; 	end
+;; end
+;; 
+;; function AceEvent.events:OnUnused(target, eventname)
+;;    -- patch bug
+;;    if not eventname == "PARTY_MEMBERS_CHANGED" then
+;; 		AceEvent.frame:UnregisterEvent(eventname)
+;; 	end
+;; end
+
+
+;;;
+;;;; CONNECTOR
+;;;
+
+
+;; name!?
+
+;; use prod server to authenticate key!?
+;; - means i do need to add a field so that key
+;;   x could be in prod but only grant access to test
+
+
+;; unified installer pointing to all platforms
+
+
+;;;
+;;;; PROD
+;;;
+
+
+;; audiodynamic threshold=0.5 ratio=0.5 characteristics=soft-knee
+;; #1 test it in calls
+;; #2 get a feel of what .5 is in loudness
+;; #3 do code that validates that when sound is < .5 then nothing
+;;    is modified in the sound
+
+
+;; log messages not all showing for shirley in replay
+
+
+;;;
+;;;; WORKFLOW
+;;;
+
+
+;; - do the changes in stable and test them locally
+;;   - if i forgot and started doing them in devel, then cherry
+;;     pick then to stable and remove the commits from devel
+;; - can also test those changes in stable with another developer
+;; - when satisfied, merge stable into master and deploy to test
+;;   for further testing
+;; - if satisfied, deploy prod
+;; - in a more involved scenario we would first deploy to stage
+;;   and do some testing there before deploying prod
+
+
+;;;
+;;;; MOBILE
+;;;
+
+
+;; fix mobile error cases and do some unit
+;; tests about it in together.mobile
+
+
+;; Java-Parser!!!!!
+
+
+;; yes join circle. weird to have people pop in avatar
+;; in our circle
+
+
+;; should we have enter-circle (in the code)
+
+
+;; space
+;; - gathering
+;; - play
+;;   - circle
+;;   - sphere
+
+;; grouped
+;; circling
+
+;; active-zone
+;; selected-zone
+
+
+;; support joining a sphere circle from the gathering
+;; and add a way of joining from within a sphere space
+
+
+;; some video sink transparency when in the 3d world
+;; fragColor.a can be used in the texture fragment shader
+;; - could be based on circle-mode using a uniform
+
+
+;; ORIGAMI
+;; - cairo vs gstreamer vs opengl upscaling
+
+
+;; KOTS
+;; - the ogg not playing sometime in kots is
+;;   because the retrieved file is corrupted
+;;   -> my main hypothesis is that the file
+;;      being an ogg should not be compressed
+;;      and there is a bug where the processor
+;;      and client end up not aggreing on the
+;;      file being compressed on not
 
 
 ;;;
@@ -53,75 +411,144 @@
 ;; moon rise kingdom sur prime (joel)
 
 
+;; MAISON
+;; - plafond (2 endroits)
+;; - plinthe chauffante Joel
+;; - sonnette d'entrée
+;; - thermostats partout
+;; - bords de fenêtres
+;; - peinture craqué
+;; - chauffe eau
+
+
 ;;;
-;;;; LEONARD
+;;;; SCRIPTING
 ;;;
 
 
-;; WEDNESDAY
-;; - try the university network but with leonard in low
-;; - also try his phone in low
+;; SCRIPT
+;; - name
+;; - say
+;; - draw
+;; - pane
+;; - position
+;; - lookat
+;; - emote
+;; - sound
+;; - add block
+;; - add entity
+;; - handler
 
 
-;; - durée, de quand à quand
-;; - nombres d'heures
-;; - rémunération?
-;; - compagnie?
+;; maybe if my first target was to create a 3d
+;; environment to explore scheme (with maybe just
+;; basic 3d commands) I would accomplish 2 things:
+;; - target a larger audience than just Gambit
+;; - not get into the complexities of a fully open
+;;   scripting language
+;; think about all involved before and talk to Marc
+;; about this idea
 
 
-;; - complexity of jazz's core layer that includes
-;;   the object system, the code walker, the module
-;;   system and more (complexity of integrating with
-;;   syntax)
-;; - primitive or r7rs modules
-;; - i think a simple approach using primitive as marc
-;;   had outlined would be best to start and maybe then
-;;   to a proof-of-concept of reengineering jazz over
-;;   gambit's r7rs modules
-;; - how does gambit know what modules to compile (jazz
-;;   uses explicit metadata coupled with protected decl)
-;; - maybe the autoload mecanism is replaced by gambit's
-;;   support for circular dependencies
-;;   - need to understand exactly how that works!
-;; - the need of the type system to have access to
-;;   a prototype version of imports
+;; the problem with text in entity script is not
+;; multisampling but using msaa and its form of
+;; screen door transparency
 
 
-;; probably approach the problem more as also redoing the
-;; whole kernel thing based on Gambit's module system as a
-;; first pass
+;; think about inlined sourcification
+;; - we don't see the call site
+;; - we see call site local variables while seing
+;;   inlined code which is a bit surprising
 
 
-;; - repository
-;;   - search path
-;;   - can contain binaries and source
-;; - package
-;; - module
-;; - dialect
-;; - import
-;; - export
-;; - phase
-;; - only
-;; - except
-;; - prefix
-;; - rename
-;; - autoload
-;; - cond
-;; - native
-;; - public to auto export
-;; - export other module
-;; - a or module:a to delay module load
-;; - everything can be moved with no path burned
-;; - support for multiple configurations
-;; - common lisp approach to macros / syntax
-;; - safety / type system
-;; - crash handler
+;;;
+;;;; LINUX
+;;;
 
 
-;; build system
+;; - do something with the command- shortcuts on linux
+;; - capture screen -> no render target
+;; - go into World press = (for info)
+;;   -> frozen
 
 
-;; gaea / earth
+;;;
+;;;; BONGU
+;;;
+
+
+;; SYNTAX
+;; - runtime/record
+;; - jazz:define-literal (runtime/unit)
+;; - block
+;; - macro stuff
+;;   - %%force-uniqueness
+;; - jazz:define-check-macro
+;; - unsafe
+;; - primitives (define-synto)
+;; - unit
+;; - require
+;; - jazz:define-structure
+
+
+;; MARC
+;; - does --enable-dynamic-clib make a big diff?
+;; - it is possible to update a primitive (marc)
+
+
+;; pourrait-on import des modules avec $
+
+
+;; added ".jazz" to ##scheme-file-extensions
+
+
+;; MISSING
+;; - gsc always build without checking time
+;; - make modules always rebuilds all
+;; - ##debug-modules? #t not even usable as output
+;;   shows files tried about 1000000000 times each
+;; - the @ dirs are a mess
+;; - the @ dirs do not support multiple configurations
+;; - ultimately why did marc never fucking consult me
+;; - edouard : oh ya i might be available 1 day during
+;;   my week break. ya right 1 day will do it
+
+
+;; possiblement le kernel va devenir juste 1 niveau
+;; avec la syntaxe dans module# pour chaque concept
+
+
+;; le code dans un define-macro a JUSTE access a
+;; l'environnement de base de Gambit
+
+
+;; AHHH les import fonctionnent pas dans les #
+;; - ils sont probablement juste laissés tel quel
+;;   pour l'expansion de l'appelant
+
+
+;; ##search-module-aux
+
+
+;; gsi kernel module to ... (unit as runtime macro)
+;; gsi jazz module to ... load a jazz module (jazz as runtime macro)
+
+
+;; 1,000,000 things depend on jazz.exe
+;; i'm back to the gordian knot of i want and need jazz.exe
+;; but how do i make jazz available to scheme users!?
+;; - what did the old kernel as a library code do?
+
+
+;; the gambit primitive module system is non
+;; hygienic and so the expansions have to be
+;; aware of that
+
+
+;; MARC
+;; - the hygienic solution would end up doing a
+;;   huge include at end call site of each checked
+;;   function :( :( :(
 
 
 ;;;
@@ -136,6 +563,36 @@
 ;; - explore latest gambit integration
 ;; - try to use a metal inspired architecture!?
 ;; - explore feasability of a metal backend!?
+;; - easy to create simple code / unit tests
+;;   like simply import ... in jazz.test and go
+
+
+;; maybe really embrace the sector / area thingy
+;; and make it clean (mesh / instanced based!?) !?
+
+
+;; maybe start with multiple vbo which is easy
+;; to maintain but the mesh generator could
+;; easily be changed to pack everything in the
+;; same vbo later on i think!?
+
+
+;; no bone etc... should improve performance
+;; of blocks no!?
+
+
+;;;
+;;;; TOGETHER
+;;;
+
+
+;; clean compilation warnings
+
+
+;; break up my profile into clean git places
+
+
+;; headphones plug/unplug on windows
 
 
 ;;;
@@ -148,8 +605,8 @@
 ;; as in real life in (more than) a semi circle above
 
 
-;; - start with a proof-of-concept of doing a presence
-;;   circle and try to guess who the other is looking at
+;; start with a proof-of-concept of doing a presence
+;; circle and try to guess who the other is looking at
 
 
 ;; - enable knowing the direction you are looking at
@@ -183,33 +640,6 @@
 ;;   - and it would seem that if I then override to
 ;;     .037 then the sync is good even when the reported
 ;;     latency between dts and pts is .2ish
-
-
-;;;
-;;;; LATENCY
-;;;
-
-
-;; maybe when going down I should send all the video
-;; content!? or maybe only the iframe if one present!?
-
-
-;; when all is working I should be able to remove
-;; all the (max 0 <ts>) patches everywhere
-
-
-;; maybe we take less vs more time to go down depending
-;; on the size of the wave, e.g. we go down immediately
-;; from a 2s wave and take a really long time to go down
-;; from a tiny perturbation (probably not even a good
-;; idea if we start using vad for going down)
-
-
-;; GAZAA
-;; - extract all nugets from gazaa
-;;   - maybe my gritches because of my mac going brrzzz
-;;     on my routes would be fixed by gazaa's not doing
-;;     any too small changes!?
 
 
 ;;;
@@ -278,23 +708,8 @@
 ;;     camera packet which should be smooth!?
 
 
-;; STREAMS
-;; - add an icon at top
-;; - show entry for mp4 if not preprocessed yet
-;; - when click just preprocess it and show
-;;   "preprocessing"
-;; - if not playable because too high don't
-;;   preprocess for nothing and user message...
-;; - maybe then the generated files could go into a separate
-;;   folder so users have a clean experience
-
-
 ;; OVERFLOW
 ;; - barbara solid bar of ring overflows
-
-
-;; WEBSITE
-;; - add andres mac virus-checker image
 
 
 ;;;
@@ -302,6 +717,27 @@
 ;;;
 
 
+;; PROD
+;; cd sirius/prod
+;; deploy
+;; copy install/together-sirius-prod to notary
+;; cd notary
+;; rm -rf together-sirius-prod.app/.git
+;; /usr/bin/xattr -r -c -s together-sirius-prod.app
+;; ll together-sirius-prod.app/Contents/Libraries
+;; /usr/bin/codesign --force --options runtime --entitlements Entitlements.plist --timestamp --verbose=4 -s "Developer ID Application: Guillaume Cartier (R74FF3EJWG)" --digest-algorithm=sha1,sha256 together-sirius-prod.app/Contents/Libraries/libcairo.2.dylib
+;; <repeat for each library> ...
+;; /usr/bin/codesign --force --options runtime --entitlements Entitlements.plist --timestamp --verbose=4 -s "Developer ID Application: Guillaume Cartier (R74FF3EJWG)" --digest-algorithm=sha1,sha256 together-sirius-prod.app
+;; /usr/bin/ditto -c -k --keepParent together-sirius-prod.app together-sirius-prod.zip
+;; /usr/bin/xcrun altool --notarize-app -f together-sirius-prod.zip --primary-bundle-id com.togethersphere.TogetherSirius -u gucartier@gmail.com -p @keychain:Together\ Test --output-format xml
+;; /usr/bin/xcrun altool --notarization-info <key-returned-from-previous-command> -u gucartier@gmail.com -p @keychain:Together\ Test
+;; /usr/bin/xcrun stapler staple -v together-sirius-prod.app
+;; rm together-sirius-prod.zip
+
+
+;; TEST
+;; cd sirius/test
+;; deploy
 ;; copy install/together-sirius-test to notary
 ;; cd notary
 ;; rm -rf together-sirius-test.app/.git
@@ -314,6 +750,7 @@
 ;; /usr/bin/xcrun altool --notarize-app -f together-sirius-test.zip --primary-bundle-id com.togethersphere.TogetherSirius -u gucartier@gmail.com -p @keychain:Together\ Test --output-format xml
 ;; /usr/bin/xcrun altool --notarization-info <key-returned-from-previous-command> -u gucartier@gmail.com -p @keychain:Together\ Test
 ;; /usr/bin/xcrun stapler staple -v together-sirius-test.app
+;; rm together-sirius-test.zip
 
 
 ;; TESTING
@@ -322,11 +759,6 @@
 
 ;; NOTES
 ;; - when the codesigning fails, there will be a LogFileURL that can be pasted into a browser to have a full log
-
-
-;; TODO
-;; - an env var for the app signing identity would make perfect sense and
-;;   go well in .jaz and that way it stays private and is not in the repo
 
 
 ;;;
@@ -382,6 +814,14 @@
 
 ;; #8
 ;; Mount Together to check that it worked
+;; Unmount
+
+;; #9
+;; Copy Together Test.dmg to website/limited
+;; commit and push
+;; go to montreal
+;; cd /var/www/together
+;; sudo git pull
 
 
 ;;;
@@ -454,18 +894,6 @@
 ;; - server upload latency (or roundtrip) early warning
 ;; - this is also a very good place to test my audio and
 ;;   video being on separate udp ports hypothesis
-
-
-;; ASYNCHRONOUS
-;; - search delay-event (post send ... too!?)
-;;   that do not acquire the task mutex
-;;   - or that sleep or do other blocking
-;;     behavior on the critical event thread
-
-
-;; SPHERE
-;; - investigate barbara's crash when I'm already
-;;   in kingdom
 
 
 ;; facture Francois 100$/h
@@ -752,21 +1180,6 @@ net.ipv4.tcp_keepalive_probes=5
 
 
 ;;;
-;;;; PERSONAL
-;;;
-
-
-;; FRANCINE
-;; - plafond (2 endroits)
-;; - plinthe chauffante Joel
-;; - sonnette d'entrée
-;; - thermostats partout
-;; - bords de fenêtres
-;; - peinture craqué
-;; - chauffe eau
-
-
-;;;
 ;;;; FRANCOIS
 ;;;
 
@@ -905,19 +1318,6 @@ net.ipv4.tcp_keepalive_probes=5
 
 
 ;; basic Jazz build on the website
-
-
-;; EVALUATE
-;; - could I do something to ctrl-enter in deployed code
-;;   not finding auto-audio? and the likes when I ctrl-enter
-;;   in setup-circle!?
-;;   - maybe not do jazz:outline-generate-filter-access as this
-;;     is ok for importing but not for a ctrl-enter inside a module
-;;     that needs access to private fields!? -> really think about this
-;;   - adding these to the otl makes ctrl-work
-;;     (definition (auto-audio?))
-;;     (definition (auto-video?))
-;;     (definition (auto-live?))
 
 
 ;; why am I not saving locations as unit names in snapshots!?
@@ -1242,36 +1642,6 @@ net.ipv4.tcp_keepalive_probes=5
 ;;;
 
 
-;; bug in the audiobasesink gap code!? -> test-audioz
-
-
-;; because of together's .configurations I will
-;; need to do the thing of automatically determining
-;; the kernel compiler
-
-
-;; implement invalidate? on all platforms
-
-
-;; should test for #\. in the read of the listener
-;; and error if unexpected char!?
-
-
-;; MESSAGE
-;; - use strcasestr to check if error in warning
-;;   and grab stack!?
-;; - capture messages into snapshot!?
-;; - handle error messages to crash!?
-;; - look at all message type thinking about us
-;;   ignoring them at the moment
-;; - GST_ELEMENT_ERROR
-
-
-;; ECHO
-;; - my mic is mono and barbara is stereo!?
-;; - we capture the microphone in channel=1 !!!?!
-
-
 ;; WEBRTCAP
 ;; - when stopping
 ;;   one element does ap_delete and the other still is
@@ -1469,38 +1839,6 @@ net.ipv4.tcp_keepalive_probes=5
 
 
 ;;;
-;;;; WARCRAFT
-;;;
-
-
-;; -- comment
-
-;; /fstack: Shows a Z-ordered (I think) list of all the UI frames under the cursor
-;; /etrace: Shows a running commentary of game events (and the parameters passed to them) as they happen
-;; /dump: Just dumps a variable's value to chat. This works better than print for tables.
-;; /script: Anything following this will executed immediately as Lua code.
-
-;; debugstack()
-;; print("HELLO")
-;; message('Arcania ready!')
-;; RaidNotice_AddMessage(RaidBossEmoteFrame, "GOGOGO!!!", ChatTypeInfo["RAID_WARNING"])
-
-;; f:Hide()
-
-;; bartender4 -> [@target,exists]show;[combat]show;hide
-
-
-;;;
-;;;; PERSONAL
-;;;
-
-
-;; web backup of everything
-
-;; git lfs for my backup!!?!
-
-
-;;;
 ;;;; GSTREAMER
 ;;;
 
@@ -1687,6 +2025,14 @@ net.ipv4.tcp_keepalive_probes=5
 ;; - Alain Marcotte
 ;; - Jennifer McMillan & kids
 ;; - Gambit mailing list
+
+
+;; CIRCLING
+;; - jason
+;; - lilin
+;; - kenny!?
+;; - circling montreal people!?
+;; - rhona's people!?
 
 
 ;; MAYBE
@@ -1899,115 +2245,6 @@ net.ipv4.tcp_keepalive_probes=5
 
 
 ;;;
-;;;; SCRIPTING
-;;;
-
-
-;; SCRIPT
-;; - name
-;; - say
-;; - draw
-;; - pane
-;; - position
-;; - lookat
-;; - emote
-;; - sound
-;; - add block
-;; - add entity
-;; - handler
-
-
-;; maybe if my first target was to create a 3d
-;; environment to explore scheme (with maybe just
-;; basic 3d commands) I would accomplish 2 things:
-;; - target a larger audience than just Gambit
-;; - not get into the complexities of a fully open
-;;   scripting language
-;; think about all involved before and talk to Marc
-;; about this idea
-
-
-;; the problem with text in entity script is not
-;; multisampling but using msaa and its form of
-;; screen door transparency
-
-
-;; think about inlined sourcification
-;; - we don't see the call site
-;; - we see call site local variables while seing
-;;   inlined code which is a bit surprising
-
-
-;;;
-;;;; WINDOWS
-;;;
-
-
-;; RNNOISE
-;; - from a vsvars shell
-;; - git clone https://github.com/almogh52/rnnoise-cmake.git
-;; - cd rnnoise-cmake
-;; - mkdir build
-;; - cd build
-;; - cmake -DRNNOISE_COMPILE_OPUS=1 ..
-;; - cmake --build . --config Release
-
-
-;; NSIS
-;; - can we override the size needed info
-;; - confirmation dialog on replace
-;; - block user from changing destination
-
-
-;; CODE SIGNING
-;;
-;; First step is clearly to be able to reproduce
-;; #1 first installation scary dialog
-;; #2 antivirus chocking first launch to death
-;;
-;; - the windowns unzipper preserves the flag that says the file was
-;;   downloaded from internet and applies it to every file recursively
-;; - 7-zip does not
-;;
-;; - SignTool (SignCode is deprecated)
-;; - PowerShell New-SelfSignedCertificate (MakeCert is deprecated)
-;;
-;; Using PowerShell (Admin)
-;; PS C:\Home> New-SelfSignedCertificate -Subject "Together Code Signing Certificate" -Type CodeSigningCert -FriendlyName Together -CertStoreLocation cert:\LocalMachine\My
-;; 
-;; 
-;;    PSParentPath: Microsoft.PowerShell.Security\Certificate::LocalMachine\My
-;; 
-;; Thumbprint                                Subject
-;; ----------                                -------
-;; E94FFDEA425037EF16DE164825FF7151223B0464  CN=Together Code Signing Certificate
-;;
-;; certlm.msc -> certicates app
-;;
-;; $cert=Get-ChildItem -Path Cert:\LocalMachine\My -CodeSigningCert
-;;
-;; Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
-;;
-;; $cert=Get-ChildItem -Path Cert:\LocalMachine\Root -CodeSigningCert
-;; Set-AuthenticodeSignature -FilePath "C:\Home\together\setup\Together Setup.exe" -Certificate $cert -HashAlgorithm SHA256
-
-
-;; NAHIMIC
-;; - service that bugs windows by generating a crash
-;;   every 5 seconds and polute the clipboard in the process
-
-
-;; WINDOWS DPI
-;; - I could search the source code of NSIS for
-;;   ManifestDPIAware and see what they do!?
-
-
-;; TODO
-;; - understand why if i click and hold on the title bar of
-;;   the windows, the input thread stops being called it seems
-
-
-;;;
 ;;;; OTHERS
 ;;;
 
@@ -2076,6 +2313,8 @@ net.ipv4.tcp_keepalive_probes=5
 
 ;; nc -l 1299
 ;; nc localhost 1299
+;; g_print
+;; gst_debug_print_stack_trace
 ;; (setenv "HOME" "c:/Home") to test pristine conditions
 ;; redirect both stdout and stderr to a file >&
 ;; git log -- filename1 filename2 ...
@@ -2084,9 +2323,12 @@ net.ipv4.tcp_keepalive_probes=5
 ;; git log --pretty=format:"%s" --since=1.weeks > world.log
 ;; git log --pretty=format:"%h; %ai; %s" > world.log
 ;; git log --pretty=format:"%h; %ai; %an; %s" > world.log
-;; 7z.exe a -t7z "Dawn of Space.7z" "C:\\Program Files (x86)\\Dawn of Space" -xr\!.git
-;; make deselect-gen-for-commit
+;; git log -S "dynamic" --follow -p "lib/world.client/src/world/audio.jazz"
 ;; git clean -xfd
+;; 7z.exe a -t7z "Dawn of Space.7z" "C:\\Program Files (x86)\\Dawn of Space" -xr\!.git
+;; diff --color test/1.0.0/servers/Together/identities prod/1.0.0/servers/Together/identities
+;; find dir -type f -name "*.o1" | wc -l
+;; make deselect-gen-for-commit
 ;; locate (linux)
 ;; lddtree (linux)
 ;; (c-code "___ACTLOG_BEGIN_PS(TOTO,_);")
@@ -2095,6 +2337,7 @@ net.ipv4.tcp_keepalive_probes=5
 ;; lldb <executable> -- <arguments>
 ;; - r
 ;; - bt
+;; du -sh dir
 ;; DYLD_PRINT_LIBRARIES=1
 
 
@@ -2121,6 +2364,7 @@ net.ipv4.tcp_keepalive_probes=5
         (jazz.ui)
         (jazz.ui.dialog)
         (jazz.view)
+        (jazz.window)
         (gaia)
         (time))
 
@@ -2150,7 +2394,33 @@ net.ipv4.tcp_keepalive_probes=5
   
   
   (method override (test self)
-    @w
+    (let ((window (current-toplevel)))
+      (let ((pos (mouse-position window)))
+        (set-mouse-position window (nu+ pos {Point 0 5})))))
+  
+  
+  @w
+  (method override (test self)
+    (let ((dir (choose-directory)))
+      (iterate-directory dir
+        (lambda (subdir)
+          (let ((name (get-name subdir)))
+            (let ((undername (string-append "_" name)))
+              (let ((scm (new-file subdir (add-extension undername "scm"))))
+                (when (exists? scm)
+                  (debug (get-name scm))
+                  (rename scm (new-file subdir (add-extension name "scm")))))
+              (let ((jazz (new-file subdir (add-extension undername "jazz"))))
+                (when (exists? jazz)
+                  (debug (get-name jazz))
+                  (rename jazz (new-file subdir (add-extension name "jazz"))))))))
+        files?: #f
+        directories?: #t
+        recursive?: #t)))
+  
+  
+  @w
+  (method override (test self)
     (let ((dir {Directory Home "Devel" "gambit" "app" "latest"}))
       (let ((full (new-file dir "full.log"))
             (partial (new-file dir "gambit.log")))
@@ -2269,7 +2539,20 @@ net.ipv4.tcp_keepalive_probes=5
             (increase! count)))
         files?: #t
         directories?: #f)
-      (user-message "Deleted {a} .DS_Store" count))))
+      (user-message "Deleted {a} .DS_Store" count)))
+  
+  
+  (method override (test3 self)
+    (let ((dir {Directory Home "Devel" "together" "app" "devel" "lib" "stress"})
+          (output (open-output-string)))
+      (loop (for i from 1000 to 3999)
+            (let ((base (format "stress{s width: 4 justify: :right padding: #\\0}" i)))
+              (call-with-output-file (path-settings (new-file dir (add-extension base "jazz")))
+                (lambda (output)
+                  (format output "(module {a} jazz){%}" base)))
+              (format output "{%}                            {a}" base)))
+      (set-clipboard-text (get-output-string output))
+      (debug 'done))))
 
 
 (register-profile-class Together)
